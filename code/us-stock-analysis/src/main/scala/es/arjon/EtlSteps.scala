@@ -1,6 +1,8 @@
 package es.arjon
 
+import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+
 import scala.util.Try
 
 case class Stock(name: String, dateTime: String, open: Double, high: Double, low: Double, close: Double)
@@ -37,6 +39,7 @@ object RunAll {
     import org.apache.spark.sql.functions._
     import spark.implicits._
 
+
     val ds = stocksDS.
       withColumn("full_date", unix_timestamp($"dateTime", "yyyy-MM-dd").cast("timestamp")).
       filter("full_date >= \"2016-01-01\"").
@@ -47,12 +50,22 @@ object RunAll {
       withColumnRenamed("name", "symbol").
       join(lookup, Seq("symbol"))
 
-    ds.show()
+    // https://weishungchung.com/2016/08/21/spark-analyzing-stock-price/
+    val movingAverageWindow20 = Window.partitionBy($"symbol").orderBy("full_date").rowsBetween(-20, 0)
+    val movingAverageWindow50 = Window.partitionBy($"symbol").orderBy("full_date").rowsBetween(-50, 0)
+    val movingAverageWindow100 = Window.partitionBy($"symbol").orderBy("full_date").rowsBetween(-100, 0)
 
-    DatasetToParquet.process(spark, ds,
-      destinationFolder = "dataset/output.parquet")
+    // Calculate the moving average
+    val stocksMA = ds.
+      withColumn("ma20", avg($"close").over(movingAverageWindow20)).
+      withColumn("ma50", avg($"close").over(movingAverageWindow50)).
+      withColumn("ma100", avg($"close").over(movingAverageWindow100))
 
-    DatasetToPostgres.process(spark, ds)
+    stocksMA.show(100)
+
+    DatasetToParquet.process(spark, stocksMA, destinationFolder = "dataset/output.parquet")
+
+    DatasetToPostgres.process(spark, stocksMA)
 
     spark.stop()
   }

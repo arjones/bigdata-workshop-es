@@ -9,5 +9,8 @@ CREATE TABLE stocks (
   high double precision	NOT NULL,
   low double precision	NOT NULL,
   close double precision	NOT NULL,
+  MA20 double precision	NOT NULL,
+  MA50 double precision	NOT NULL,
+  MA100 double precision	NOT NULL,
   PRIMARY KEY(full_date, symbol)
 );

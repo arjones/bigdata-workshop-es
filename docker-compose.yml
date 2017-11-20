@@ -7,6 +7,38 @@ services:
   #   volumes:
   #     - "./nginx/html:/usr/share/nginx/html:ro"
   #
+  master:
+    image: arjones/spark:2.1.2
+    command: ["/opt/spark/sbin/start-master.sh"]
+    environment:
+      MASTER: spark://master:7077
+      SPARK_NO_DAEMONIZE: 1
+    ports:
+      - 4040:4040
+      - 6066:6066
+      - 7077:7077
+      - 8080:8080
+    volumes:
+      - ./code:/app
+      - ./code/us-stock-analysis/dataset:/dataset
+
+  worker:
+    image: arjones/spark:2.1.2
+    command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
+    environment:
+      MASTER: spark://master:7077
+      SPARK_NO_DAEMONIZE: 1
+    depends_on:
+      - master
+    ports:
+      - "4040"
+      - "6066"
+      - "7077"
+      - "8080"
+    volumes:
+      - ./code:/app
+      - ./code/us-stock-analysis/dataset:/dataset
+
   zeppelin:
     image: apache/zeppelin:0.7.3
     ports:
@@ -17,95 +49,31 @@ services:
       - postgres
     volumes:
       - "./zeppelin/notebook:/notebook"
-      - "./zeppelin/logs:/logs"
+      - "./code:/app"
     environment:
       MASTER: spark://master:7077
-    deploy:
-      restart_policy:
-        condition: on-failure
-
-  master:
-    image: p7hb/docker-spark:2.1.1
-    hostname: master
-    depends_on:
-      - postgres
-      - kafka
-      - zookeeper
-    ports:
-      - "4040:4040"
-      - "8080:8080"
-      - "8081:8081"
-    environment:
-      SPARK_NO_DAEMONIZE: 1
-    command: /usr/local/spark/sbin/start-master.sh
-
-  slave1:
-    image: p7hb/docker-spark:2.1.1
-    hostname: slave1
-    depends_on:
-      - postgres
-      - master
-      - kafka
-      - zookeeper
-    environment:
-      SPARK_NO_DAEMONIZE: 1
-    command: ["/usr/local/spark/sbin/start-slave.sh", "spark://master:7077"]
-
-  slave2:
-    image: p7hb/docker-spark:2.1.1
-    hostname: slave2
-    depends_on:
-      - postgres
-      - master
-      - kafka
-      - zookeeper
-    environment:
-      SPARK_NO_DAEMONIZE: 1
-    command: ["/usr/local/spark/sbin/start-slave.sh", "spark://master:7077"]
 
   superset:
-    image: amancevice/superset
+    image: tylerfowler/superset # amancevice/superset
     restart: always
     depends_on:
       - postgres
-    environment:
-      MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+    # environment:
+    #   MAPBOX_API_KEY: ${MAPBOX_API_KEY}
     ports:
       - "8088:8088"
     volumes:
       - ./superset/conf:/etc/superset
 
-# hdfs
-# https://github.com/smizy/docker-hadoop-base
-
-# Hue HDFS file browser
-# https://github.com/big-data-europe/docker-hadoop-spark-workbench
   kafka:
-    image: confluentinc/cp-kafka:3.3.0
-    network_mode: host
+    image: spotify/kafka
     restart: always
-    depends_on:
-      - zookeeper
+    ports:
+      - "2181:2181"
+      - "9092:9092"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: localhost:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-      - ./mnt/kafka/data:/var/lib/kafka/data
-    extra_hosts:
-      - "moby:127.0.0.1"
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    network_mode: host
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 32181
-      ZOOKEEPER_TICK_TIME: 2000
-    volumes:
-      - ./mnt/zk/data:/var/lib/zookeeper/data
-    extra_hosts:
-      - "moby:127.0.0.1"
+      ADVERTISED_HOST: localhost
+      ADVERTISED_PORT: 9092
 
   postgres:
     image: postgres:10
@@ -118,11 +86,3 @@ services:
       POSTGRES_PASSWORD: w0rkzh0p
     ports:
       - "5432:5432"
-
-  portainer:
-    image: portainer/portainer
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./mnt/portainer/data:/data
-    ports:
-      - "9000:9000"

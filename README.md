@@ -1,26 +1,20 @@
 # Workshop de Big Data con Apache Spark [🇪🇸]
-Este repositorio contiene el workshop de Big Data con Apache Spark.
+Material del Workshopde Big Data
 
-## Setup & Configuración
-* La plataforma funciona con [Docker](https://docs.docker.com/engine/installation/) instalarlo para seguir.
+## Levantar ambiente
+Depende de [docker >= 17.03](https://www.docker.com/community-edition)
+```bash
+docker-compose up
+```
+## Elementos
+* Apache Spark
+* Kafka
+* Postgres
+* Superset (Dashboard)
 
-* Correr script de Docker Compose: `docker-compose up -d`
-* Crear el usuario y contraseña de Superset: `docker exec -it superset superset-init`
-* Check the portal with links to all services: http://localhost:8888/
+## Codigo
+* [Analisis de acciones de EEUU](code/us-stock-analysis) (US Stocks)
 
-
-
-`docker exec -it bigdataworkshop_master_1  spark-shell --master spark://master:7077`
-
-
-
-## Acknowledge
-This workshop is heavily inspired by these material.
-
-* https://github.com/caroljmcdonald/spark-ml-randomforest-creditrisk
-* https://github.com/hipic/biz_data_LA#section-22-clustering-food-related-business-in-yelp-using-spark-machine-learning-2017
-* https://community.hortonworks.com/articles/53903/spark-machine-learning-pipeline-by-example.html
-* https://jaceklaskowski.gitbooks.io/mastering-apache-spark/spark-mllib/spark-mllib-pipelines-example-classification.html
-
-## Contribuciones
-Si te gustaría contribuir para ese material, hacelo a través de un pull request.
+## Sobre
+Gustavo Arjones &copy; 2017  
+[arjon.es](http://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)
