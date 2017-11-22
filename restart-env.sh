@@ -2,7 +2,7 @@
 
 docker-compose --project-name wksp down
 
-docker volume rm postgres-data
+docker volume rm wksp_postgres-data
 
 docker-compose --project-name wksp up -d
 
