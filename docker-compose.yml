@@ -1,0 +1,108 @@
+version: "3"
+services:
+  # docs:
+  #   image: nginx
+  #   ports:
+  #     - "8888:80"
+  #   volumes:
+  #     - "./nginx/html:/usr/share/nginx/html:ro"
+  #
+  master:
+    image: arjones/spark:2.1.2
+    command: ["/opt/spark/sbin/start-master.sh"]
+    environment:
+      MASTER: spark://master:7077
+      SPARK_NO_DAEMONIZE: 1
+    ports:
+      - 4040:4040
+      - 6066:6066
+      - 7077:7077
+      - 8080:8080
+    volumes:
+      - ./code:/app
+      - ./code/us-stock-analysis/dataset:/dataset
+
+  worker1:
+    image: arjones/spark:2.1.2
+    command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
+    environment:
+      MASTER: spark://master:7077
+      SPARK_NO_DAEMONIZE: 1
+    depends_on:
+      - master
+    ports:
+      - "4040"
+      - "6066"
+      - "7077"
+      - "8080"
+    volumes:
+      - ./code:/app
+      - ./code/us-stock-analysis/dataset:/dataset
+
+  worker2:
+    image: arjones/spark:2.1.2
+    command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
+    environment:
+      MASTER: spark://master:7077
+      SPARK_NO_DAEMONIZE: 1
+    depends_on:
+      - master
+    ports:
+      - "4040"
+      - "6066"
+      - "7077"
+      - "8080"
+    volumes:
+      - ./code:/app
+      - ./code/us-stock-analysis/dataset:/dataset
+
+  zeppelin:
+    image: apache/zeppelin:0.7.3
+    ports:
+      - "3000:8080"
+    stop_grace_period: 1m30s
+    depends_on:
+      - master
+      - postgres
+    volumes:
+      - "./zeppelin/notebook:/notebook"
+      - "./code:/app"
+    environment:
+      MASTER: spark://master:7077
+
+  superset:
+    image: tylerfowler/superset # amancevice/superset
+    restart: always
+    depends_on:
+      - postgres
+    # environment:
+    #   MAPBOX_API_KEY: ${MAPBOX_API_KEY}
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset/conf:/etc/superset
+
+  kafka:
+    image: spotify/kafka
+    restart: always
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    environment:
+      ADVERTISED_HOST: localhost
+      ADVERTISED_PORT: 9092
+
+  postgres:
+    image: postgres:10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/scripts:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: workshop
+      POSTGRES_USER: workshop
+      POSTGRES_PASSWORD: w0rkzh0p
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-data:
