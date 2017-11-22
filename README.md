@@ -48,9 +48,34 @@ spark-submit --master 'spark://master:7077' \
   --class "es.arjon.RunAll" \
   --driver-class-path /app/postgresql-42.1.4.jar \
   target/scala-2.11/us-stock-analysis-assembly-0.1.jar \
-  /dataset/stocks-small /dataset/yahoo-symbols-201709.csv /tmp/output.parquet
+  /dataset/stocks-small /dataset/yahoo-symbols-201709.csv /dataset/output.parquet
 ```
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
+
+
+## Usando Spark-SQL
+```bash
+docker exec -it wksp_master_1 bash
+spark-shell
+```
+
+```scala
+import spark.implicits._
+val df = spark.read.parquet("/dataset/out")
+df.show
+
+df.createOrReplaceTempView("stocks")
+
+// Usando particiones
+val highestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM stocks WHERE year=2017 AND month=9 GROUP BY symbol")
+highestClosingPrice.show
+highestClosingPrice.explain
+
+// No usando particiones
+val highestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM stocks WHERE full_date > '2017-09-01' GROUP BY symbol")
+highestClosingPrice.explain
+highestClosingPrice.show
+```
 
 ## Sobre
 Gustavo Arjones &copy; 2017  

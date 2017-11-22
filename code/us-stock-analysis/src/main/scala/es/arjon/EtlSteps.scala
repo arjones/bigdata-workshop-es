@@ -5,25 +5,39 @@ import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
 import scala.util.Try
 
-case class Stock(name: String, dateTime: String, open: Double, high: Double, low: Double, close: Double)
+case class Stock(name: String,
+                 dateTime: String,
+                 open: Double,
+                 high: Double,
+                 low: Double,
+                 close: Double)
 
 object Stock {
-  def fromCSV(name: String, line: String): Option[Stock] = {
+  def fromCSV(symbol: String, line: String): Option[Stock] = {
     val v = line.split(",")
 
-    Try {
-      Stock(
-        name,
-        dateTime = v(0),
-        open = v(1).toDouble,
-        high = v(2).toDouble,
-        low = v(3).toDouble,
-        close = v(4).toDouble
+    try {
+      Some(
+        Stock(
+          symbol,
+          dateTime = v(0),
+          open = v(1).toDouble,
+          high = v(2).toDouble,
+          low = v(3).toDouble,
+          close = v(4).toDouble
+        )
       )
-    }.toOption
+
+    } catch {
+      case ex: Exception => {
+        println(s"Failed to process $symbol, with input $line, with ${ex.toString}")
+        None
+      }
+    }
 
   }
 }
+
 
 object RunAll {
   def main(args: Array[String]): Unit = {
@@ -54,7 +68,6 @@ object RunAll {
     // For implicit conversions like converting RDDs to DataFrames
     import org.apache.spark.sql.functions._
     import spark.implicits._
-
 
     val ds = stocksDS.
       withColumn("full_date", unix_timestamp($"dateTime", "yyyy-MM-dd").cast("timestamp")).
@@ -95,13 +108,13 @@ object ReadStockCSV {
     val files = sc.wholeTextFiles(originFolder, minPartitions = 40)
 
     val stocks = files.map { case (filename, content) =>
-      content.split("\n").flatMap { line =>
-        val quote = new java.io.File(filename).
-          getName.
-          replace(".us.txt", "").
-          toUpperCase
+      val symbol = new java.io.File(filename).
+        getName.
+        split('.')(0).
+        toUpperCase
 
-        Stock.fromCSV(quote, line)
+      content.split("\n").flatMap { line =>
+        Stock.fromCSV(symbol, line)
       }
     }.
       flatMap(e => e).
@@ -118,7 +131,7 @@ object ReadSymbolLookup {
     import spark.implicits._
     spark.read.
       option("header", true).
-      option("inferSchema", "true").
+      option("inferSchema", true).
       csv(file).
       select($"Ticker", $"Category Name").
       withColumnRenamed("Ticker", "symbol").

@@ -2,3 +2,5 @@ __pycache__
 .DS_Store
 mnt/*
 checkpoint
+derby.log
+metastore_db
