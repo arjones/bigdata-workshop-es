@@ -54,6 +54,8 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 
 
 ## Usando Spark-SQL
+Usando SparkSQL para acceder a los datos en Parquet y hacer analysis interactiva.
+
 ```bash
 docker exec -it wksp_master_1 bash
 spark-shell
@@ -76,6 +78,22 @@ val highestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM sto
 highestClosingPrice.explain
 highestClosingPrice.show
 ```
+
+
+## Creando un Dashboard con Superset
+
+* Acceder a http://localhost:8088/, user: `admin`, pass: `superset`.
+* Agregar el database (Sources > Databases):
+  - Database: `Workshop`
+  - SQLAlchemy URI: `postgresql://workshop:w0rkzh0p@postgres/workshop`
+  - OK
+* Agregar tabla (Sources > Tables) :
+  - Database: `workshop`
+  - Table Name: `stocks`
+* Create Slices & Dashboard [official docs](https://superset.incubator.apache.org/tutorial.html#creating-a-slice-and-dashboard)
+
+![Superset Dashboard Example](superset.png)
+
 
 ## Sobre
 Gustavo Arjones &copy; 2017  
