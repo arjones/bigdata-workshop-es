@@ -12,7 +12,8 @@ Material del Workshopde Big Data
 * [Analisis de acciones de EEUU](code/us-stock-analysis) (US Stocks)
 
 ## Levantar ambiente
-Depende de [docker >= 17.03](https://www.docker.com/community-edition)
+Depende de [docker >= 17.03](https://www.docker.com/community-edition).
+
 ```bash
 ./restart-env.sh
 
@@ -28,7 +29,17 @@ file.take(10).foreach(println)
 ```
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 
+## Compilar el codigo
+Compilar y empaquetar el codigo para deploy en el cluster
+
+```bash
+cd code/us-stock-analysis
+sbt clean assembly
+```
+
 ## Submit de un job
+Conectarse al Spark-Master y hacer submit del programa
+
 ```bash
 docker exec -it wksp_master_1 bash
 
