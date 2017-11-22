@@ -8,9 +8,10 @@ docker-compose up
 ```
 ## Elementos
 * Apache Spark
-* Kafka
+* Apache Zeppelin
+* Apache Kafka
 * Postgres
-* Superset (Dashboard)
+* [Superset](http://superset.incubator.apache.org) (Dashboard)
 
 ## Codigo
 * [Analisis de acciones de EEUU](code/us-stock-analysis) (US Stocks)
