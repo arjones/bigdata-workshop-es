@@ -27,13 +27,29 @@ object Stock {
 
 object RunAll {
   def main(args: Array[String]): Unit = {
+    if (args.length < 3) {
+      System.err.println(
+        s"""
+           |Usage: RunAll <dataset folder> <lookup file> <output folder>
+           |  <dataset folder> folder where stocks data is located
+           |  <lookup file> file containing lookup information
+           |  <output folder> folder to write parquet data
+           |
+           |RunAll /dataset/stocks-small /dataset/yahoo-symbols-201709.csv /dataset/output.parquet
+        """.stripMargin)
+      System.exit(1)
+    }
+
+    val Array(stocksFolder, lookupSymbol, outputFolder) = args
+
+
     val spark = SparkSession.
       builder.
       appName("Stocks:ETL").
       getOrCreate()
 
-    val stocksDS = ReadStockCSV.process(spark, "dataset/stocks-small")
-    val lookup = ReadSymbolLookup.process(spark, "dataset/yahoo-symbols-201709.csv")
+    val stocksDS = ReadStockCSV.process(spark, stocksFolder)
+    val lookup = ReadSymbolLookup.process(spark, lookupSymbol)
 
     // For implicit conversions like converting RDDs to DataFrames
     import org.apache.spark.sql.functions._
@@ -42,7 +58,7 @@ object RunAll {
 
     val ds = stocksDS.
       withColumn("full_date", unix_timestamp($"dateTime", "yyyy-MM-dd").cast("timestamp")).
-      filter("full_date >= \"2016-01-01\"").
+      filter("full_date >= \"2017-09-01\"").
       withColumn("year", year($"full_date")).
       withColumn("month", month($"full_date")).
       withColumn("day", dayofmonth($"full_date")).
@@ -63,7 +79,7 @@ object RunAll {
 
     stocksMA.show(100)
 
-    DatasetToParquet.process(spark, stocksMA, destinationFolder = "dataset/output.parquet")
+    DatasetToParquet.process(spark, stocksMA, outputFolder)
 
     DatasetToPostgres.process(spark, stocksMA)
 

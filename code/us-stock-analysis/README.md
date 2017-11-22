@@ -2,9 +2,9 @@
 
 
 
-### Package a jar containing your application
+### Create a jar containing your application and its deps
 ```bash
-$ sbt package
+$ sbt clean assembly
 ```
 
 ### Use spark-submit to run your application
@@ -13,7 +13,7 @@ $ sbt package
 $ spark-submit \
   --class "es.arjon.FromCsvToParquet" \
   --master 'local[*]' \
-  target/scala-2.11/us-stock-analysis_2.11-0.1.jar
+  target/scala-2.11/us-stock-analysis-assembly-0.1.jar
 ```
 
 ```bash
@@ -21,5 +21,5 @@ $ spark-submit \
   --class "es.arjon.RunAll" \
   --master 'spark://master:7077' \
   --driver-class-path /dataset/postgresql-42.1.4.jar \
-  target/scala-2.11/us-stock-analysis_2.11-0.1.jar
+  target/scala-2.11/us-stock-analysis-assembly-0.1.jar
 ```
