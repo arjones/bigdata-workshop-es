@@ -63,7 +63,7 @@ spark-shell
 
 ```scala
 import spark.implicits._
-val df = spark.read.parquet("/dataset/out")
+val df = spark.read.parquet("/dataset/output.parquet")
 df.show
 
 df.createOrReplaceTempView("stocks")
