@@ -13,16 +13,22 @@ object FakeStockPriceGenerator extends App {
   if (args.length < 2) {
     System.err.println(
       s"""
-         |Usage: KafkaProducerCmd <brokers> <topics>
+         |Usage: FakeStockPriceGenerator <brokers> <topics>
          |  <brokers> is a list of one or more Kafka brokers
          |  <topic> one kafka topic to produce to
          |
-         |  KafkaProducer localhost:9092 stocks
+         |  FakeStockPriceGenerator kafka:9092 stocks
         """.stripMargin)
     System.exit(1)
   }
 
   val Array(brokers, topic) = args
+
+  println(
+    s"""
+       |Generating faking stocks prices at $brokers/$topic
+       |Each tick (300ms) represents 3min in clock time
+    """.stripMargin)
 
   val props = new Properties()
   props.put("bootstrap.servers", brokers)
@@ -101,7 +107,7 @@ object FakeStockPriceGenerator extends App {
     val price = quote.price + (signal * rnd.nextDouble * quote.volatility)
 
     //
-    f"""{ "symbol": "${quote.symbol}", "timestamp": "${nextMarketTime}", "price": $price%2.3f }""".toString
+    f"""{"symbol":"${quote.symbol}","timestamp":"${nextMarketTime}","price":$price%2.3f}"""
   }
 
 }
