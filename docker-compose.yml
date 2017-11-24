@@ -56,19 +56,20 @@ services:
       - ./code:/app
       - ./code/us-stock-analysis/dataset:/dataset
 
-  zeppelin:
-    image: apache/zeppelin:0.7.3
-    ports:
-      - "3000:8080"
-    stop_grace_period: 1m30s
-    depends_on:
-      - master
-      - postgres
-    volumes:
-      - "./zeppelin/notebook:/notebook"
-      - "./code:/app"
-    environment:
-      MASTER: spark://master:7077
+  # zeppelin:
+  #   image: dylanmei/zeppelin:0.7.3
+  #   ports:
+  #     - "3000:8080"
+  #   stop_grace_period: 1m30s
+  #   depends_on:
+  #     - master
+  #     - postgres
+  #   volumes:
+  #     - ./zeppelin/notebook:/zeppelin/notebook
+  #     - ./code:/app
+  #     - ./code/us-stock-analysis/dataset:/dataset
+  #   environment:
+  #     MASTER: spark://master:7077
 
   superset:
     image: tylerfowler/superset # amancevice/superset
@@ -89,7 +90,7 @@ services:
       - "2181:2181"
       - "9092:9092"
     environment:
-      ADVERTISED_HOST: localhost
+      ADVERTISED_HOST: kafka
       ADVERTISED_PORT: 9092
 
   postgres:

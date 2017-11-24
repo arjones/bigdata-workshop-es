@@ -1,9 +1,9 @@
 package es.arjon
 
-import kafka.serializer.StringDecoder
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.sql.streaming.{OutputMode, ProcessingTime}
+import org.apache.spark.sql.types._
+
 
 object StreamingETL extends App {
   if (args.length < 2) {
@@ -13,6 +13,7 @@ object StreamingETL extends App {
          |  <brokers> is a list of one or more Kafka brokers
          |  <topics> is a list of one or more kafka topics to consume from
          |
+         |  StreamingETL kafka:9092 stocks
         """.stripMargin)
     System.exit(1)
   }
@@ -23,18 +24,69 @@ object StreamingETL extends App {
     appName("Stocks:StreamingETL").
     getOrCreate()
 
-  val conf = spark.conf
-  val ssc = new StreamingContext(spark.sparkContext, Seconds(1))
-  ssc.checkpoint("checkpoint")
+  //  val brokers = "kafka:9092"
+  //  val topics = "stocks"
 
 
-  // Create direct kafka stream with brokers and topics
-  val topicsSet = topics.split(",").toSet
-  val kafkaParams = Map[String, String]("metadata.broker.list" -> brokers)
-  val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](
-    ssc, kafkaParams, topicsSet)
+  // Create DataSet representing the stream of input lines from kafka
+  //  https://databricks.com/blog/2017/04/26/processing-data-in-apache-kafka-with-structured-streaming-in-apache-spark-2-2.html
+  val jsons = spark.
+    readStream.
+    format("kafka").
+    option("kafka.bootstrap.servers", brokers).
+    option("subscribe", topics).
+    load()
+  //    option("startingOffsets", "earliest").
 
-  messages.print()
-  ssc.start()
-  ssc.awaitTermination()
+  jsons.printSchema
+
+  val schema = StructType(Seq(
+    StructField("symbol", StringType, nullable = false),
+    StructField("timestamp", TimestampType, nullable = false),
+    StructField("price", StringType, nullable = false)
+  ))
+
+  import org.apache.spark.sql.functions._
+  import spark.implicits._
+
+  val jsonOptions = Map("timestampFormat" -> "yyyy-MM-dd'T'HH:mm'Z'")
+  val stocks = jsons.
+    select(from_json($"value".cast("string"), schema, jsonOptions).as("values")).
+    select($"values.*")
+
+  stocks.printSchema
+
+  // Write to Parquet
+  stocks.
+    withColumn("year", year($"timestamp")).
+    withColumn("month", month($"timestamp")).
+    withColumn("day", dayofmonth($"timestamp")).
+    withColumn("hour", hour($"timestamp")).
+    withColumn("minute", minute($"timestamp")).
+    writeStream.
+    format("parquet").
+    partitionBy("year", "month", "day", "hour", "minute").
+    option("startingOffsets", "earliest").
+    option("checkpointLocation", "/dataset/checkpoint").
+    option("path", "/dataset/streaming.parquet").
+    trigger(ProcessingTime("30 seconds")).
+    start()
+
+  // There is no JDBC sync for now!
+  // https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html
+  //
+
+  // Using as an ordinary DF
+  val avgPricing = stocks.
+    groupBy($"symbol").
+    agg(sum($"price").as("price"))
+
+  // Start running the query that prints the running results to the console
+  val query = avgPricing.writeStream.
+    outputMode(OutputMode.Complete).
+    format("console").
+    trigger(ProcessingTime("10 seconds")).
+    start()
+
+  query.awaitTermination()
 }
