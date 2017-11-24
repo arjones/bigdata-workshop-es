@@ -4,3 +4,4 @@ mnt/*
 checkpoint
 derby.log
 metastore_db
+streaming.parquet

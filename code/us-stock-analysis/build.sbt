@@ -13,7 +13,8 @@ libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "42.1.1",
 
   "org.apache.spark" %% "spark-streaming" % "2.1.2" % "provided",
-  "org.apache.spark" %% "spark-streaming-kafka-0-8" % "2.1.2"
+  "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.1.2",
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.2"
 )
 
 assemblyMergeStrategy in assembly := {
