@@ -43,16 +43,19 @@ object StreamingETL extends App {
   val schema = StructType(Seq(
     StructField("symbol", StringType, nullable = false),
     StructField("timestamp", TimestampType, nullable = false),
-    StructField("price", StringType, nullable = false)
+    StructField("price", DoubleType, nullable = false)
   ))
 
   import org.apache.spark.sql.functions._
   import spark.implicits._
 
   val jsonOptions = Map("timestampFormat" -> "yyyy-MM-dd'T'HH:mm'Z'")
-  val stocks = jsons.
-    select(from_json($"value".cast("string"), schema, jsonOptions).as("values")).
-    select($"values.*")
+  val stocksJson = jsons.
+    select(from_json($"value".cast("string"), schema, jsonOptions).as("values"))
+
+  stocksJson.printSchema
+
+  val stocks = stocksJson.select($"values.*")
 
   stocks.printSchema
 
@@ -72,14 +75,14 @@ object StreamingETL extends App {
     trigger(ProcessingTime("30 seconds")).
     start()
 
-  // There is no JDBC sync for now!
+  // There is no JDBC sink for now!
   // https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html
   //
 
   // Using as an ordinary DF
   val avgPricing = stocks.
     groupBy($"symbol").
-    agg(sum($"price").as("price"))
+    agg(avg($"price").as("avg_price"))
 
   // Start running the query that prints the running results to the console
   val query = avgPricing.writeStream.
@@ -87,6 +90,16 @@ object StreamingETL extends App {
     format("console").
     trigger(ProcessingTime("10 seconds")).
     start()
+
+  // Have all the aggregates in an in-memory table
+  //  avgPricing
+  //    .writeStream
+  //    .queryName("avgPricing")    // this query name will be the table name
+  //    .outputMode("complete")
+  //    .format("memory")
+  //    .start()
+  //
+  //  spark.sql("select * from avgPricing").show()   // interactively query in-memory table
 
   query.awaitTermination()
 }
