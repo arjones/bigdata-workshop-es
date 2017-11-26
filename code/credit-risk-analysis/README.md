@@ -5,7 +5,13 @@
 sbt clean assembly
 
 spark-submit \
-    --class es.arjon.Credit \
+    --class es.arjon.CreditRiskTrain \
+    --master 'local[*]' \
+    target/scala-2.11/credit-risk-analysis-assembly-0.1.jar
+
+
+spark-submit \
+    --class es.arjon.CreditRiskAnalysis \
     --master 'local[*]' \
     target/scala-2.11/credit-risk-analysis-assembly-0.1.jar
 ```
