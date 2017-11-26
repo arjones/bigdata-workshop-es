@@ -1,36 +1,44 @@
 package es.arjon
 
 import org.apache.spark.ml.classification.RandomForestClassificationModel
-import org.apache.spark.ml.feature.{StringIndexer, VectorAssembler}
 import org.apache.spark.sql.SparkSession
 
 object CreditRiskAnalysis extends DatasetUtil {
 
   def main(args: Array[String]): Unit = {
+    if (args.length < 2) {
+      System.err.println(
+        s"""
+           |Usage: CreditRiskAnalysis <datasource> <model>
+           |  <datasource> CSV dataset to PREDICT credit
+           |  <model> path to the model
+           |
+           |  CreditRiskAnalysis /dataset/credit-risk/germancredit-user-input.csv /dataset/credit-risk.model
+        """.stripMargin)
+      System.exit(1)
+    }
+
+    //    val Array(datasource, modelPath) = Array("/dataset/credit-risk/germancredit-user-input.csv",
+    //      "/dataset/credit-risk.model")
+    val Array(datasource, modelPath) = args
+
+    //    implicit val ss = spark
     implicit val spark = SparkSession.
       builder.
       appName("CreditRisk").
       getOrCreate()
 
+    val df = loadUserInputData(datasource)
+    val dfVector = vectorizeInput(df)
+
+    val model = RandomForestClassificationModel.load(modelPath)
+    val predictions = model.transform(dfVector)
+
     import spark.implicits._
-    val df = loadData("data/germancredit-new.csv")
 
-    val featureCols = Array("balance", "duration", "history", "purpose", "amount",
-      "savings", "employment", "instPercent", "sexMarried", "guarantors",
-      "residenceDuration", "assets", "age", "concCredit", "apartment",
-      "credits", "occupation", "dependents", "hasPhone", "foreign")
-
-    val assembler = new VectorAssembler().setInputCols(featureCols).setOutputCol("features")
-    val df2 = assembler.transform(df)
-    //    df2.select($"features").show(false)
-
-    val labelIndexer = new StringIndexer().setInputCol("creditability").setOutputCol("label")
-    val df3 = labelIndexer.fit(df2).transform(df2)
-    //    df3.select($"features", $"label", $"creditability").show(30, false)
-
-    val model = RandomForestClassificationModel.load("data/credit.model")
-    val predictions = model.transform(df3)
-    predictions.select($"label", $"creditability", $"amount").show(false)
+    println("=" * 30)
+    println("Prediction are:")
+    predictions.select($"userId", $"amount", $"prediction").show(false)
   }
 
 

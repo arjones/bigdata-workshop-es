@@ -1,7 +1,6 @@
 package es.arjon
 
-import java.util.logging.{Level, Logger}
-
+import es.arjon.CreditRiskAnalysis.vectorizeInput
 import org.apache.spark.ml.classification._
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.{StringIndexer, VectorAssembler}
@@ -14,9 +13,22 @@ import org.apache.spark.sql.functions._
 // Heavily inspired on
 // https://mapr.com/blog/predicting-loan-credit-risk-using-apache-spark-machine-learning-random-forests/
 object CreditRiskTrain extends DatasetUtil {
-  val logger = Logger.getLogger("CreditRiskAnalysis")
-
   def main(args: Array[String]) {
+    if (args.length < 2) {
+      System.err.println(
+        s"""
+           |Usage: CreditRiskTrain <datasource> <model>
+           |  <datasource> CSV dataset to learn from
+           |  <model> path to save model to
+           |
+           |  CreditRiskTrain /dataset/credit-risk/germancredit.csv /dataset/credit-risk.model
+        """.stripMargin)
+      System.exit(1)
+    }
+
+    val Array(datasource, modelPath) = args
+
+
     // When using Spark-Shell:
     // implicit val ss = spark
     implicit val spark = SparkSession.
@@ -26,7 +38,7 @@ object CreditRiskTrain extends DatasetUtil {
 
     import spark.implicits._
 
-    val creditDF = loadData("data/germancredit.csv")
+    val creditDF = loadTrainData(datasource)
     creditDF.printSchema
     creditDF.show
 
@@ -37,23 +49,17 @@ object CreditRiskTrain extends DatasetUtil {
     creditDF.describe("balance").show
     creditDF.groupBy("creditability").agg(avg('balance), avg('amount), avg('duration)).show
 
-    val featureCols = Array("balance", "duration", "history", "purpose", "amount",
-      "savings", "employment", "instPercent", "sexMarried", "guarantors",
-      "residenceDuration", "assets", "age", "concCredit", "apartment",
-      "credits", "occupation", "dependents", "hasPhone", "foreign")
+    val dfVector = vectorizeInput(creditDF)
 
-    val assembler = new VectorAssembler().setInputCols(featureCols).setOutputCol("features")
-    val df2 = assembler.transform(creditDF)
-    df2.select($"features").show(false)
+    // Convert Strings into Label Identifiers (Double)
+    val labelIndexer = new StringIndexer().setInputCol("creditability").setOutputCol("label")
 
-    val labelIndexer = new StringIndexer().
-      setInputCol("creditability").
-      setOutputCol("label")
-    val df3 = labelIndexer.fit(df2).transform(df2)
-    df3.select($"features", $"label", $"creditability").show(30, false)
+    // Add Label Identifiers field to the DF
+    val dfLabeled = labelIndexer.fit(dfVector).transform(dfVector)
+    dfLabeled.select($"features", $"label", $"creditability").show(30, false)
 
     val splitSeed = 5043
-    val Array(trainingData, testData) = df3.randomSplit(Array(0.7, 0.3), splitSeed)
+    val Array(trainingData, testData) = dfLabeled.randomSplit(Array(0.7, 0.3), splitSeed)
 
     val classifier = new RandomForestClassifier().
       setImpurity("gini").
@@ -72,7 +78,6 @@ object CreditRiskTrain extends DatasetUtil {
     val evaluator = new BinaryClassificationEvaluator().setLabelCol("label")
     val accuracy = evaluator.evaluate(predictions)
     println(f"Accuracy: $accuracy%2.3f")
-    logger.warning(f"Accuracy: $accuracy%2.3f")
     printPredictionMetrics(predictions)
 
 
@@ -118,7 +123,7 @@ object CreditRiskTrain extends DatasetUtil {
 
 
     // Save the model to latter use
-    model.write.overwrite().save("data/credit.model")
+    model.write.overwrite().save(modelPath)
 
     // load it again
     // val sameModel = RandomForestClassificationModel.load("data/credit.model")
@@ -134,7 +139,7 @@ object CreditRiskTrain extends DatasetUtil {
     // Calculate the Quality Metrics
     val rm = new RegressionMetrics(rdd)
     val msg =
-      s""""
+      s"""
          |MSE:           ${rm.meanSquaredError}
          |MAE:           ${rm.meanAbsoluteError}
          |RMSE Squared:  ${rm.rootMeanSquaredError}
@@ -144,7 +149,6 @@ object CreditRiskTrain extends DatasetUtil {
       """.stripMargin
 
     println(msg)
-    logger.log(Level.WARNING, msg)
   }
 }
 

@@ -10,7 +10,9 @@ scalacOptions += "-target:jvm-1.8"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "2.1.2" % "provided",
-  "org.apache.spark" %% "spark-mllib" % "2.1.2" % "provided"
+  "org.apache.spark" %% "spark-mllib" % "2.1.2" % "provided",
+
+  "com.github.fommil.netlib" % "all" % "1.1.2" pomOnly()
 )
 
 assemblyMergeStrategy in assembly := {

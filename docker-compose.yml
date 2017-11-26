@@ -20,7 +20,7 @@ services:
       - 8080:8080
     volumes:
       - ./code:/app
-      - ./code/us-stock-analysis/dataset:/dataset
+      - ./dataset:/dataset
 
   worker1:
     image: arjones/spark:2.1.2
@@ -37,7 +37,7 @@ services:
       - "8080"
     volumes:
       - ./code:/app
-      - ./code/us-stock-analysis/dataset:/dataset
+      - ./dataset:/dataset
 
   worker2:
     image: arjones/spark:2.1.2
@@ -54,7 +54,7 @@ services:
       - "8080"
     volumes:
       - ./code:/app
-      - ./code/us-stock-analysis/dataset:/dataset
+      - ./dataset:/dataset
 
   # zeppelin:
   #   image: dylanmei/zeppelin:0.7.3
@@ -67,7 +67,7 @@ services:
   #   volumes:
   #     - ./zeppelin/notebook:/zeppelin/notebook
   #     - ./code:/app
-  #     - ./code/us-stock-analysis/dataset:/dataset
+  #     - ./dataset:/dataset
   #   environment:
   #     MASTER: spark://master:7077
 
