@@ -55,7 +55,7 @@ Modificar el codigo para tomar la entrada de **Kafka** y escribir en **Postgres*
 
 ## Más información
 * [Predicting Loan Credit Risk using Apache Spark Machine Learning Random Forests](https://mapr.com/blog/predicting-loan-credit-risk-using-apache-spark-machine-learning-random-forests/)
-*
+* [Original: Analysis of German Credit Data](https://onlinecourses.science.psu.edu/stat857/node/215)
 
 ____
 Gustavo Arjones &copy; 2017
