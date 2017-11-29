@@ -1,0 +1,7 @@
+target
+.DS_Store
+spark-warehouse
+.idea
+dataset/output.parquet/
+derby.log
+metastore_db
