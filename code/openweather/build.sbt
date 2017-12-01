@@ -14,7 +14,11 @@ libraryDependencies ++= Seq(
 
   "org.apache.spark" %% "spark-streaming" % "2.1.2" % "provided",
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.1.2",
-  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.2"
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.1.2",
+
+  "net.databinder.dispatch" %% "dispatch-core" % "0.11.1",
+  "org.json4s" %% "json4s-native" % "3.2.9",
+  "org.json4s" %% "json4s-jackson" % "3.2.9"
 )
 
 assemblyMergeStrategy in assembly := {
