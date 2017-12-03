@@ -3,8 +3,10 @@ package es.openweather
 import dispatch._
 import Defaults._
 import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization.{read}
+import org.json4s.jackson.Serialization.{ read }
 import org.json4s.NoTypeHints
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import java.util.Properties
 
 //http://krishnabhargav.github.io/scala,/how/to/2014/06/15/Scala-Json-REST-Example.html
 object WeatherProducer {
@@ -17,8 +19,21 @@ object WeatherProducer {
     //even though its a https . doing a .secure is not required
     val request = url("http://api.openweathermap.org/data/2.5/forecast")
     val requestAsGet = request.GET //not required but lets be explicit
-
-    //Step 2 : Set the required parameters
+    val BROKERS = "kafka:9092"
+ 
+    
+    val props = new Properties()
+    props.put("bootstrap.servers", BROKERS)
+    props.put("client.id", "OpenWeatherGenerator")
+    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+    
+    val producer = new KafkaProducer[String, String](props)
+    val topic = "OpenWeather"
+    
+    while (true) {
+      
+      //Step 2 : Set the required parameters
     val builtRequest = requestAsGet.addQueryParameter("id", "524901")
       .addQueryParameter("APPID", API_KEY)
 
@@ -32,7 +47,11 @@ object WeatherProducer {
       //Step 5 : Request was successful & response was OK
       case x if x.getStatusCode() == 200 =>
         //Step 6 : Response was OK, read the contents
-        handleJsonOutput(x.getResponseBody)
+        val data = new ProducerRecord[String, String](topic, null, x.getResponseBody)
+        producer.send(data)
+        println("Sent:" + x.getStatusCode)
+        //handleJsonOutput(x.getResponseBody)
+        
       case y => //Step 7 : Response is not OK, read the error
         println("Failed with status code" + y.getStatusCode())
     }
@@ -43,8 +62,11 @@ object WeatherProducer {
         println("Failed but"); println(x.getMessage)
     }
 
-    println("ENTER TO EXIT")
-    readLine()
+      Thread.sleep(300)
+
+    }
+
+    
   }
 
   private def handleJsonOutput(body: String): Unit = {
@@ -64,5 +86,5 @@ object WeatherProducer {
 case class WindObject(speed: Float, deg: Float)
 case class WeatherObject(id: Int, main: String, description: String)
 case class TempObject(temp: Float, temp_min: Float, temp_max: Float, pressure: Float, sea_level: Float, humidity: Float)
-case class WeatherContainerObject(main: TempObject, weather: List[WeatherObject], wind: WindObject )
+case class WeatherContainerObject(main: TempObject, weather: List[WeatherObject], wind: WindObject)
 case class ResponseRoot(cod: String, cnt: Int, list: List[WeatherContainerObject])
