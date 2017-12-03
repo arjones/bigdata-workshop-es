@@ -21,7 +21,7 @@ object WeatherProducer {
     val requestAsGet = request.GET //not required but lets be explicit
     val BROKERS = "kafka:9092"
  
-    
+     
     val props = new Properties()
     props.put("bootstrap.servers", BROKERS)
     props.put("client.id", "OpenWeatherGenerator")
