@@ -13,7 +13,7 @@ import java.util.Properties
 object WeatherProducer {
 
   private val API_KEY = "b31f1615a005989872e7c12084ade812"
-  private val CITIES_FILE = "/Users/nacho/Documents/GoogleDrive/ITBA/Seminario de Topicos Avanzados/bigdata-workshop-es/dataset/openweather/cityList.csv"
+  private val CITIES_FILE = "/dataset/openweather/cityList.csv"
 
   def main(args: Array[String]): Unit = {
     if (args.length < 2) {

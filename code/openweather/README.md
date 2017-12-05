@@ -10,7 +10,7 @@ $ sbt clean assembly
 Dentro del mismo package tenemos la clase del simulador [WeatherProducer](./code/openweather/src/main/scala/es/openweather/WeatherProducer.scala)
 
 ```bash
-# Compilar el similador
+# Compilar el simulador
 cd code/openweather
 sbt clean assembly
 
@@ -20,6 +20,7 @@ cd /app/openweather
 java -cp target/scala-2.11/openweather-assembly-0.1.jar \ 
 "es.openweather.WeatherProducer" kafka:9092 OpenWeather
 ```
+
 ## Chequear el contenido de Kafka
 
 ```bash
@@ -31,6 +32,8 @@ docker exec -it wksp_kafka_1 bash
 # apretar CTRL+C para salir
 ```
 
+## Iniciar consimidor de mensajes
+
 ```bash
 docker exec -it wksp_master_1 bash
 
@@ -39,5 +42,5 @@ spark-submit --master 'spark://master:7077' \
   --class "es.openweather.WeatherConsumer" \
   --total-executor-cores 2 \
   target/scala-2.11/openweather-assembly-0.1.jar \
-  kafka:9092 stoOpenWeathercks
+  kafka:9092 OpenWeather
 ```
