@@ -79,7 +79,7 @@ object WeatherConsumer extends App {
     trigger(ProcessingTime("40 seconds")).
     start()
 
-  val avgWindSpeed = weather.join(cities, "ID")
+  val avgWindSpeed = weather.join(cities, "ID").
     groupBy($"City").
     agg(avg($"wind.speed"))
 
