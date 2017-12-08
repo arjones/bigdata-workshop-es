@@ -25,32 +25,58 @@ object WeatherConsumer extends App {
     .option("kafka.bootstrap.servers", brokers)
     .option("subscribe", topics)
     .load()
-  jsons.printSchema
 
   val schema = StructType(Seq(
-    StructField("coord", new StructType().add("lon", FloatType).add("lat", FloatType), nullable = false),
-    StructField("weather", new StructType().add("id", LongType).add("main", StringType), nullable = false),
-    StructField("main", new StructType()
-      .add("temp", FloatType)
-      .add("pressure", FloatType)
-      .add("humidity", IntegerType)
-      .add("temp_max", FloatType)
-      .add("temp_min", FloatType),
-      nullable = false),
+    StructField("id", LongType, nullable = false),
+    StructField("name", StringType, nullable = false),
     StructField("visibility", IntegerType, nullable = false),
+    StructField("wind", new StructType().add("speed", FloatType).add("deg", FloatType), nullable = false),
     StructField("dt", LongType, nullable = false),
-    StructField("sys", new StructType().add("sunrise", LongType).add("sunset", LongType), nullable = false)
+    StructField("coord", new StructType().add("lon", FloatType).add("lat", FloatType), nullable = false),
+    StructField("sys", new StructType().add("sunrise", LongType).add("sunset", LongType), nullable = false),
+    StructField("main", new StructType()
+      .add("temp", FloatType, nullable = false)
+      .add("pressure", FloatType, nullable = false)
+      .add("humidity", IntegerType, nullable = false)
+      .add("temp_max", FloatType, nullable = false)
+      .add("temp_min", FloatType, nullable = false), nullable = false)
+//    ESTO NO ANDA. Me base en https://stackoverflow.com/questions/39485374/how-to-create-schema-array-in-data-frame-with-spark
+//    StructField("weather", ArrayType(StructType(Array(
+//      StructField("id", LongType, nullable = false),
+//      StructField("main", LongType, nullable = false)
+//    ))), nullable = false)
   ))
 
   import org.apache.spark.sql.functions._
   import spark.implicits._
 
   val jsonOptions = Map("timestampFormat" -> "yyyy-MM-dd'T'HH:mm'Z'")
-
   val weatherJSON = jsons.select(from_json($"value".cast("string"), schema, jsonOptions).as("values"))
-  weatherJSON.printSchema
-
   val weather = weatherJSON.select($"values.*")
 
   weather.printSchema
+
+  weather.
+    withColumn("id", $"id").
+    writeStream.
+    format("parquet").
+    partitionBy("id").
+    option("startingOffsets", "earliest").
+    option("checkpointLocation", "/dataset/checkpoint-openweather").
+    option("path", "/dataset/streaming-openweahter.parquet").
+    trigger(ProcessingTime("40 seconds")).
+    start()
+
+  val avgWindSpeed = weather.
+    groupBy($"id").
+    agg(avg($"wind.speed"))
+
+  val query = avgWindSpeed.writeStream.
+    outputMode(OutputMode.Complete).
+    format("console").
+    trigger(ProcessingTime("10 seconds")).
+    start()
+
+  query.awaitTermination()
+
 }

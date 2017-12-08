@@ -39,22 +39,22 @@ services:
       - ./code:/app
       - ./dataset:/dataset
 
-  worker2:
-    image: arjones/spark:2.1.2
-    command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
-    environment:
-      MASTER: spark://master:7077
-      SPARK_NO_DAEMONIZE: 1
-    depends_on:
-      - master
-    ports:
-      - "4040"
-      - "6066"
-      - "7077"
-      - "8080"
-    volumes:
-      - ./code:/app
-      - ./dataset:/dataset
+  #worker2:
+  # image: arjones/spark:2.1.2
+  #  command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
+  #  environment:
+  #    MASTER: spark://master:7077
+  #    SPARK_NO_DAEMONIZE: 1
+  #  depends_on:
+  #    - master
+  #  ports:
+  #    - "4040"
+  #    - "6066"
+  #    - "7077"
+  #    - "8080"
+  #  volumes:
+  #    - ./code:/app
+  #    - ./dataset:/dataset
 
   # zeppelin:
   #   image: dylanmei/zeppelin:0.7.3

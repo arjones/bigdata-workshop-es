@@ -4,7 +4,7 @@ docker-compose --project-name wksp down
 
 docker volume rm wksp_postgres-data
 
-docker-compose --project-name wksp up -d
+docker-compose --project-name wksp up -d --remove-orphans
 
 echo 'Use to check logs:
 docker-compose --project-name wksp logs -f

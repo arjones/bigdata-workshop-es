@@ -6,3 +6,4 @@ derby.log
 metastore_db
 streaming.parquet
 /target/*
+*.parquet
