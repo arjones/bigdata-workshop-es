@@ -8,6 +8,7 @@ import org.json4s.NoTypeHints
 import scala.io.Source
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import java.util.Properties
+import java.util.Calendar
 
 //http://krishnabhargav.github.io/scala,/how/to/2014/06/15/Scala-Json-REST-Example.html
 object WeatherProducer {
@@ -58,6 +59,7 @@ object WeatherProducer {
         content onSuccess {
           case x if x.getStatusCode() == 200 => {
             val data = new ProducerRecord[String, String](topic, null, x.getResponseBody)
+//            println(s"About to Send id ${data}")
             producer.send(data)
           }
           case y => println(s"Failed with status code ${y.getStatusCode()}")

@@ -3,6 +3,7 @@ package es.openweather
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.{ OutputMode, ProcessingTime }
 import org.apache.spark.sql.types._
+import java.util.Calendar
 
 object WeatherConsumer extends App {
   if (args.length < 2) {
@@ -68,11 +69,25 @@ object WeatherConsumer extends App {
     .as[CitiesCSV]
   weather.printSchema
 
-  weather.
+  
+  val weatherOutput = weather.
+    join(cities, "ID").
     withColumn("id", $"id").
-    writeStream.
+    withColumn("City", $"City").
+    withColumn("WindSpeed", $"wind.speed").
+    withColumn("Temp", $"main.temp").
+    withColumn("Pressure", $"main.pressure").
+    withColumn("Humidity", $"main.humidity").
+    withColumn("Visibility", $"visibility").
+    withColumn("full_date", current_timestamp()).
+    withColumn("Year", year($"full_date")).
+    withColumn("Month", month($"full_date")).
+    withColumn("Day", dayofmonth($"full_date")).
+    withColumn("Hour", hour($"full_date"))
+    
+    weatherOutput.toDF.writeStream.
     format("parquet").
-    partitionBy("id").
+    partitionBy("id","Year","Month","Day","Hour").
     option("startingOffsets", "earliest").
     option("checkpointLocation", "/dataset/checkpoint-openweather").
     option("path", "/dataset/streaming-openweahter.parquet").
@@ -83,7 +98,11 @@ object WeatherConsumer extends App {
     groupBy($"City").
     agg(avg($"wind.speed"))
 
-  val query = avgWindSpeed.writeStream.
+  val avgTemp = weatherOutput.
+    groupBy($"City",$"Hour").
+    agg(avg($"Temp"))
+    
+  val query = avgTemp.writeStream.
     outputMode(OutputMode.Complete).
     format("console").
     trigger(ProcessingTime("10 seconds")).
