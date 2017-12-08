@@ -53,7 +53,7 @@ object WeatherConsumer extends App {
   val jsonOptions = Map("timestampFormat" -> "yyyy-MM-dd'T'HH:mm'Z'")
   val weatherJSON = jsons.select(from_json($"value".cast("string"), schema, jsonOptions).as("values"))
   val weather = weatherJSON.select($"values.*")
-  
+  private val CITIES_FILE = "/dataset/openweather/cityList.csv"
   final case class CitiesCSV(
     ID: String,
     City: String,
