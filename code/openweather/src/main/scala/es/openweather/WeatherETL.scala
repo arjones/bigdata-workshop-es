@@ -8,6 +8,7 @@ import java.util.Calendar
 object WeatherETL {
 
   def main(args: Array[String]): Unit = {
+    
     val spark = SparkSession.builder.appName("Weather:ETL").getOrCreate()
     val parquetFileDF = spark.read.parquet("/dataset/streaming-openweahter.parquet")
 
