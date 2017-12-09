@@ -83,7 +83,8 @@ object WeatherConsumer extends App {
     withColumn("Year", year($"full_date")).
     withColumn("Month", month($"full_date")).
     withColumn("Day", dayofmonth($"full_date")).
-    withColumn("Hour", hour($"full_date"))
+    withColumn("Hour", hour($"full_date")).
+    drop("full_date")
     
     weatherOutput.toDF.writeStream.
     format("parquet").
