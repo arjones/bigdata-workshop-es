@@ -6,7 +6,7 @@
 ```bash
 $ sbt clean assembly
 ```
-## Iniciar el simulador de acciones
+## Iniciar el Productor de Clima en tiempo real para Argentina
 Dentro del mismo package tenemos la clase del simulador [WeatherProducer](./code/openweather/src/main/scala/es/openweather/WeatherProducer.scala)
 
 ```bash
