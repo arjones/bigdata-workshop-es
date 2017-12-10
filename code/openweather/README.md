@@ -32,7 +32,7 @@ docker exec -it wksp_kafka_1 bash
 # apretar CTRL+C para salir
 ```
 
-## Iniciar consimidor de mensajes
+## Iniciar consumidor de mensajes
 
 ```bash
 docker exec -it wksp_master_1 bash
@@ -43,4 +43,14 @@ spark-submit --master 'spark://master:7077' \
   --total-executor-cores 2 \
   target/scala-2.11/openweather-assembly-0.1.jar \
   kafka:9092 OpenWeather
+  
+```
+
+## Detener el consumido de mensajes e Iniciar el ETL
+```bash
+docker exec -it wksp_master_1 bash
+
+cd /app/openweater
+spark-submit --master 'spark://master:7077'   --class "es.openweather.WeatherETL"   --total-executor-cores 2 --driver-class-path ../postgresql-42.1.4.jar  target/scala-2.11/openweather-assembly-0.1.jar 
+  
 ```
