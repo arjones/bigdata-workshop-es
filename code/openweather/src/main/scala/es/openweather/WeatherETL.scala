@@ -36,7 +36,7 @@ object DatasetToPostgres {
     connectionProperties.put("driver","org.postgresql.Driver")
     val jdbcUrl = s"jdbc:postgresql://postgres:5432/workshop"
 
-    df.select("id","City","Temp","WindSpeed","Pressure","Humidity","Visibility","Year","Month","Day","Hour").
+    df.select("id","City","Temp","WindSpeed","Pressure","Humidity","Visibility","Year","Month","Day","Hour","Lat","Lon").
       write.
       mode(SaveMode.Append).
       jdbc(jdbcUrl, "weather", connectionProperties)

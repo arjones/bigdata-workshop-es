@@ -74,6 +74,8 @@ object WeatherConsumer extends App {
     join(cities, "ID").
     withColumn("id", $"id").
     withColumn("City", $"City").
+    withColumn("Lon", $"lon").
+    withColumn("Lat", $"lat").
     withColumn("WindSpeed", $"wind.speed").
     withColumn("Temp", $"main.temp").
     withColumn("Pressure", $"main.pressure").
