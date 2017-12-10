@@ -51,6 +51,10 @@ spark-submit --master 'spark://master:7077' \
 docker exec -it wksp_master_1 bash
 
 cd /app/openweater
-spark-submit --master 'spark://master:7077'   --class "es.openweather.WeatherETL"   --total-executor-cores 2 --driver-class-path ../postgresql-42.1.4.jar  target/scala-2.11/openweather-assembly-0.1.jar 
+spark-submit --master 'spark://master:7077'  \
+--class "es.openweather.WeatherETL" \
+--total-executor-cores 2 \
+--driver-class-path ../postgresql-42.1.4.jar \ 
+target/scala-2.11/openweather-assembly-0.1.jar 
   
 ```
