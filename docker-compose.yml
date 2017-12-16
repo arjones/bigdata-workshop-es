@@ -1,14 +1,15 @@
 version: "3"
 services:
-  # docs:
-  #   image: nginx
-  #   ports:
-  #     - "8888:80"
-  #   volumes:
-  #     - "./nginx/html:/usr/share/nginx/html:ro"
-  #
+  docs:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - "./nginx/html:/usr/share/nginx/html:ro"
+
   master:
     image: arjones/spark:2.1.2
+    restart: always
     command: ["/opt/spark/sbin/start-master.sh"]
     environment:
       MASTER: spark://master:7077
@@ -24,6 +25,7 @@ services:
 
   worker1:
     image: arjones/spark:2.1.2
+    restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
       MASTER: spark://master:7077
@@ -41,6 +43,7 @@ services:
 
   worker2:
     image: arjones/spark:2.1.2
+    restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
       MASTER: spark://master:7077
@@ -95,6 +98,7 @@ services:
 
   postgres:
     image: postgres:10
+    restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres/scripts:/docker-entrypoint-initdb.d

@@ -21,11 +21,13 @@ Los puertos de acceso a cada servicio quedaron los defaults. Ej: spark-master:70
 
 ## Levantar ambiente
 Instalar [Docker >= 17.03](https://www.docker.com/community-edition).
-Correr el script que levanta el ambiente.
-**IMPORTANTE** el script `restart-env.sh` borra cualquier dado que haya sido procesado anteriormente.
+Correr el script que levanta el ambiente `Usage: control-env.sh (start|stop|cleanup)`:
 
 ```bash
-./restart-env.sh
+./control-env.sh start
+
+**IMPORTANTE** el script `control-env.sh cleanup` borra cualquier dado que haya sido procesado anteriormente.
+
 
 # Access Spark-Master and run spark-shell
 docker exec -it wksp_master_1 bash
