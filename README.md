@@ -99,7 +99,8 @@ target/scala-2.11/openweather-assembly-0.1.jar
 ```
 ## Creando un Dashboard con Superset
 * Chequear la ip del container de Superset en docker
-  - Ir a la consola y ejecutar: ```bash docker network inspect wksp_default```
+  - Ir a la consola y ejecutar: ```bash 
+  docker network inspect wksp_default```
   - Buscar la entrada de Superset en el output: Por Ej
     ```bash
     "Name": "wksp_superset_1",
