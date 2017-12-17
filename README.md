@@ -31,7 +31,7 @@ root@588acf96a879:/app# spark-shell
 ```
 Probar:
 ```scala
-val file = sc.textFile("/dataset/yahoo-symbols-201709.csv")
+val file = sc.textFile("/dataset/openweather/cityList.csv")
 file.count
 file.take(10).foreach(println)
 ```
@@ -82,7 +82,8 @@ spark-submit --master 'spark://master:7077' \
   --total-executor-cores 2 \
   target/scala-2.11/openweather-assembly-0.1.jar \
   kafka:9092 OpenWeather
-  
+
+apretar CTRL+C para salir 
 ```
 
 ## Detener el consumidor de mensajes despues de unos minutos corriendo Iniciar el ETL
@@ -117,9 +118,8 @@ target/scala-2.11/openweather-assembly-0.1.jar
 * Agregar tabla (Sources > Tables) :
   - Database: `workshop`
   - Table Name: `weather`
+  
 * Create Slices & Dashboard [official docs](https://superset.incubator.apache.org/tutorial.html#creating-a-slice-and-dashboard)
-
-![Superset Dashboard Example](superset.png)
 
 
 ## Sobre
