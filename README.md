@@ -20,7 +20,7 @@ Los puertos de acceso a cada servicio quedaron los defaults. Ej: spark-master:70
 ## Levantar ambiente
 Instalar [Docker >= 17.03](https://www.docker.com/community-edition).
 Correr el script que levanta el ambiente.
-**IMPORTANTE** el script `restart-env.sh` borra cualquier dado que haya sido procesado anteriormente.
+**IMPORTANTE** el script `restart-env.sh` borra cualquier dato que haya sido procesado anteriormente.
 
 ```bash
 ./restart-env.sh
@@ -99,13 +99,14 @@ target/scala-2.11/openweather-assembly-0.1.jar
 ```
 ## Creando un Dashboard con Superset
 * Chequear la ip del container de Superset en docker
-  - Ir a la consola y ejecutar: docker network inspect wksp_default
+  - Ir a la consola y ejecutar: ```bash docker network inspect wksp_default```
   - Buscar la entrada de Superset en el output: Por Ej
+    ```bash
     "Name": "wksp_superset_1",
                 "EndpointID": "c62165f1cdb7b83aa585fc6405befea4591444750294282a7eda2ea529f0fe05",
                 "MacAddress": "02:42:ac:12:00:06",
                 "IPv4Address": "172.18.0.6/16",
-                "IPv6Address": ""
+                "IPv6Address": ""```
   - Utilizar el IP mencionado en espacio anterior para acceder a Superset
 * Acceder a http://172.18.0.6:8088/, user: `admin`, pass: `superset`.
 * Agregar el database (Sources > Databases):
