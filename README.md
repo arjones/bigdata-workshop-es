@@ -123,6 +123,6 @@ target/scala-2.11/openweather-assembly-0.1.jar
 
 
 ## Sobre
-Ignacio Cicero 
-Jorge Goldman
-Juan Francisco Dalceggio
+*Ignacio Cicero 
+*Jorge Goldman
+*Juan Francisco Dalceggio
