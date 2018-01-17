@@ -4,7 +4,7 @@ sudo apt-get install -y openssh-server
 # Basics
 sudo apt-get install -y \
   git \
-  openjdk-8-jre \
+  openjdk-8-jdk \
   maven \
   scala
 
