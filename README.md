@@ -42,6 +42,7 @@ file.take(10).foreach(println)
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 
 # Siga leyendo
+* [Introducción a Scala](scala/README.md)
 * [Batch Processing](README-batch.md)
 
 ## Sobre
