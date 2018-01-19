@@ -1,3 +1,7 @@
+# Enables sudo without passwd
+echo "%sudo ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+
+# SSHD
 sudo apt-get update
 sudo apt-get install -y openssh-server
 
