@@ -60,7 +60,7 @@ object RunAll {
       appName("Stocks:ETL").
       getOrCreate()
 
-    val stocksDS = ReadStockCSV.processDF(spark, stocksFolder)
+    val stocksDS = ReadStockCSV.processDS(spark, stocksFolder)
     val lookup = ReadSymbolLookup.process(spark, lookupSymbol)
 
     // For implicit conversions like converting RDDs to DataFrames
@@ -105,7 +105,7 @@ object ReadStockCSV {
     arr(arr.size - 1).split("\\.")(0).toUpperCase
   }
 
-  def processDF(spark: SparkSession, originFolder: String) = {
+  def processDS(spark: SparkSession, originFolder: String) = {
     import org.apache.spark.sql.functions._
     import spark.implicits._
 
@@ -126,7 +126,7 @@ object ReadStockCSV {
   }
 
 
-  def process(spark: SparkSession, originFolder: String) = {
+  def processRDD(spark: SparkSession, originFolder: String) = {
 
     // Using SparkContext to use RDD
     val sc = spark.sparkContext
