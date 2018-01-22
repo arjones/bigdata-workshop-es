@@ -3,8 +3,6 @@ package es.arjon
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import scala.util.Try
-
 case class Stock(name: String,
                  dateTime: String,
                  open: Double,
@@ -62,7 +60,7 @@ object RunAll {
       appName("Stocks:ETL").
       getOrCreate()
 
-    val stocksDS = ReadStockCSV.process(spark, stocksFolder)
+    val stocksDS = ReadStockCSV.processDF(spark, stocksFolder)
     val lookup = ReadSymbolLookup.process(spark, lookupSymbol)
 
     // For implicit conversions like converting RDDs to DataFrames
@@ -101,6 +99,33 @@ object RunAll {
 }
 
 object ReadStockCSV {
+
+  def extractSymbolFromFilename(filename: String) = {
+    val arr = filename.split("/")
+    arr(arr.size - 1).split("\\.")(0).toUpperCase
+  }
+
+  def processDF(spark: SparkSession, originFolder: String) = {
+    import org.apache.spark.sql.functions._
+    //    import spark.implicits._
+
+    val symbolFromFilename = udf(extractSymbolFromFilename _)
+
+    spark.read.
+      option("header", true).
+      option("inferSchema", true).
+      csv(originFolder).
+      withColumn("name", symbolFromFilename(input_file_name())).
+      withColumnRenamed("Date", "dateTime").
+      withColumnRenamed("Open", "open").
+      withColumnRenamed("High", "high").
+      withColumnRenamed("Low", "low").
+      withColumnRenamed("Close", "close").
+      drop("Volume", "OpenInt").
+      as[Stock]
+  }
+
+
   def process(spark: SparkSession, originFolder: String) = {
 
     // Using SparkContext to use RDD
@@ -108,10 +133,7 @@ object ReadStockCSV {
     val files = sc.wholeTextFiles(originFolder, minPartitions = 40)
 
     val stocks = files.map { case (filename, content) =>
-      val symbol = new java.io.File(filename).
-        getName.
-        split('.')(0).
-        toUpperCase
+      val symbol = extractSymbolFromFilename(filename)
 
       content.split("\n").flatMap { line =>
         Stock.fromCSV(symbol, line)
