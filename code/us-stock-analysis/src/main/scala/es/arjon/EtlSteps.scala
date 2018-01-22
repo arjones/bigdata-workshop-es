@@ -107,7 +107,7 @@ object ReadStockCSV {
 
   def processDF(spark: SparkSession, originFolder: String) = {
     import org.apache.spark.sql.functions._
-    //    import spark.implicits._
+    import spark.implicits._
 
     val symbolFromFilename = udf(extractSymbolFromFilename _)
 
