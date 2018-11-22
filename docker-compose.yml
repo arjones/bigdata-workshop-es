@@ -8,7 +8,7 @@ services:
       - "./nginx/html:/usr/share/nginx/html:ro"
 
   master:
-    image: arjones/spark:2.1.2
+    image: arjones/spark:2.1.3
     restart: always
     command: ["/opt/spark/sbin/start-master.sh"]
     environment:
@@ -24,7 +24,7 @@ services:
       - ./dataset:/dataset
 
   worker1:
-    image: arjones/spark:2.1.2
+    image: arjones/spark:2.1.3
     restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
@@ -42,7 +42,7 @@ services:
       - ./dataset:/dataset
 
   worker2:
-    image: arjones/spark:2.1.2
+    image: arjones/spark:2.1.3
     restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
@@ -59,21 +59,6 @@ services:
       - ./code:/app
       - ./dataset:/dataset
 
-  # zeppelin:
-  #   image: dylanmei/zeppelin:0.7.3
-  #   ports:
-  #     - "3000:8080"
-  #   stop_grace_period: 1m30s
-  #   depends_on:
-  #     - master
-  #     - postgres
-  #   volumes:
-  #     - ./zeppelin/notebook:/zeppelin/notebook
-  #     - ./code:/app
-  #     - ./dataset:/dataset
-  #   environment:
-  #     MASTER: spark://master:7077
-
   superset:
     image: tylerfowler/superset # amancevice/superset
     restart: always
@@ -84,7 +69,7 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - ./superset/conf:/etc/superset
+      - ./superset/conf:/superset
 
   kafka:
     image: spotify/kafka

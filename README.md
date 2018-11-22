@@ -39,7 +39,9 @@ val file = sc.textFile("/dataset/yahoo-symbols-201709.csv")
 file.count
 file.take(10).foreach(println)
 ```
-Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
+Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
+
+#### Alternativamente se puede probar usando la consola de [pySpark](README-pyspark.md)
 
 # Siga leyendo
 * [Introducción a Scala](scala/README.md)
