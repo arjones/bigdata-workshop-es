@@ -16,7 +16,7 @@ cd code/us-stock-analysis
 sbt clean assembly
 
 # Ejecutarlos dentro de un Worker
-docker exec -it wksp_worker1_1 bash
+docker exec -it worker1 bash
 cd /app/us-stock-analysis
 java -cp target/scala-2.11/us-stock-analysis-assembly-0.1.jar \
   "es.arjon.FakeStockPriceGenerator" kafka:9092 stocks
@@ -25,7 +25,7 @@ java -cp target/scala-2.11/us-stock-analysis-assembly-0.1.jar \
 ## Chequear el contenido de Kafka
 
 ```bash
-docker exec -it wksp_kafka_1 bash
+docker exec -it kafka bash
 
 /opt/kafka_2.11-0.10.1.0/bin/kafka-console-consumer.sh \
   --bootstrap-server kafka:9092 --topic stocks --from-beginning
@@ -37,7 +37,7 @@ docker exec -it wksp_kafka_1 bash
 Conectarse al Spark-Master y hacer submit del programa
 
 ```bash
-docker exec -it wksp_master_1 bash
+docker exec -it master bash
 
 cd /app/us-stock-analysis
 spark-submit --master 'spark://master:7077' \
@@ -50,7 +50,7 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 
 ## En otra consola, acceder al dataset de Streaming
 ```bash
-docker exec -it wksp_master_1 bash
+docker exec -it master bash
 spark-shell --total-executor-cores 2
 ```
 
@@ -69,4 +69,4 @@ df.show
 * [MLlib](README-ml.md)
 
 ____
-Gustavo Arjones &copy; 2017
+Gustavo Arjones &copy; 2017-2018

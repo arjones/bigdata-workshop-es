@@ -6,3 +6,5 @@ derby.log
 metastore_db
 streaming.parquet
 *.iso
+dataset/output.parquet/
+*.ova

@@ -30,7 +30,7 @@ Correr el script que levanta el ambiente `Usage: control-env.sh (start|stop|clea
 
 
 # Access Spark-Master and run spark-shell
-docker exec -it wksp_master_1 bash
+docker exec -it master bash
 root@588acf96a879:/app# spark-shell
 ```
 Probar:
@@ -41,6 +41,11 @@ file.take(10).foreach(println)
 ```
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
 
+### Troubleshooting
+
+Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória disponible para Docker, **aumente la memoria > 8Gb** al proceso de Docker: 
+->![](docker-advanced-config.jpg)<-
+
 #### Alternativamente se puede probar usando la consola de [pySpark](README-pyspark.md)
 
 # Siga leyendo
@@ -48,5 +53,5 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
 * [Batch Processing](README-batch.md)
 
 ## Sobre
-Gustavo Arjones &copy; 2017  
+Gustavo Arjones &copy; 2017-2018  
 [arjon.es](http://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)

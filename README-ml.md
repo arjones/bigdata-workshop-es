@@ -16,7 +16,7 @@ cd code/credit-risk-analysis
 sbt clean assembly
 
 # Conectarse al SparkMaster y hacer submit del proyecto de Entrenamiento
-docker exec -it wksp_master_1 bash
+docker exec -it master bash
 cd /app/credit-risk-analysis
 spark-submit \
   --class es.arjon.CreditRiskTrain \
@@ -58,4 +58,4 @@ Modificar el codigo para tomar la entrada de **Kafka** y escribir en **Postgres*
 * [Original: Analysis of German Credit Data](https://onlinecourses.science.psu.edu/stat857/node/215)
 
 ____
-Gustavo Arjones &copy; 2017
+Gustavo Arjones &copy; 2017-2018

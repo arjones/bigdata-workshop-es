@@ -1,7 +1,7 @@
 # Usando `pySpark`:
 
 ```bash
-docker exec -it wksp_master_1 bash
+docker exec -it master bash
 root@588acf96a879:/app# pyspark
 ```
 ```python
