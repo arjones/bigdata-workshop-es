@@ -1,12 +1,20 @@
-__pycache__
+# General
 .DS_Store
 mnt/*
+*.iso
+*.ova
+
+# Spark
 checkpoint
 derby.log
 metastore_db
 streaming.parquet
-*.iso
 dataset/output.parquet/
-*.ova
+
+# Superset Dashboard
 superset/conf/.setup-complete
 superset/conf/superset.db
+
+# Python
+.ipynb_checkpoints
+__pycache__

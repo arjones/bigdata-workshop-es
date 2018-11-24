@@ -63,6 +63,20 @@ services:
       - ./code:/app
       - ./dataset:/dataset
 
+  jupyter:
+    container_name: jupyter
+    image: arjones/pyspark:2.1.3
+    restart: always
+    environment:
+      MASTER: spark://master:7077
+    depends_on:
+      - master
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./jupyter/notebook:/notebook
+      - ./dataset:/dataset
+
   superset:
     container_name: superset
     image: tylerfowler/superset
