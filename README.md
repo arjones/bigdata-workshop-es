@@ -12,7 +12,6 @@ El workshop simula una instalación de producción utilizando container de Docke
 [docker-compose.yml](docker-compose.yml) contiene las definiciones y configuraciones para esos servicios y sus respectivas UIs:
 
 * Apache Spark: [Spark Master UI](http://localhost:8080) | [Job Progress](http://localhost:4040)
-* ~~Apache Zeppelin: [UI](http://localhost:3000)~~
 * Apache Kafka:
 * Postgres:
 * [Superset](http://superset.incubator.apache.org) [Dashboard](http://localhost:8088/)
@@ -43,8 +42,9 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
 
 ### Troubleshooting
 
-Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória disponible para Docker, **aumente la memoria > 8Gb** al proceso de Docker: 
-->![](docker-advanced-config.jpg)<-
+Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória disponible para Docker, **aumente la memoria > 8Gb** al proceso de Docker:
+
+![](docker-advanced-config.jpg)
 
 #### Alternativamente se puede probar usando la consola de [pySpark](README-pyspark.md)
 
@@ -54,4 +54,4 @@ Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória d
 
 ## Sobre
 Gustavo Arjones &copy; 2017-2018  
-[arjon.es](http://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)
+[arjon.es](https://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)
