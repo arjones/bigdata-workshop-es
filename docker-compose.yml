@@ -72,7 +72,7 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - ./superset/conf:/superset
+      - ./superset/conf/superset_config.py:/superset/superset_config.py
 
   kafka:
     container_name: kafka

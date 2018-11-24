@@ -29,6 +29,12 @@ spark-submit --master 'spark://master:7077' \
 ```
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 
+Verificar el resultado del job en la carpeta `/dataset/output.parquet`:
+
+```bash
+# Desde la maquina host
+$ tree ~/bigdata-workshop-es/dataset/output.parquet/
+```
 
 ## Usando Spark-SQL
 Usando SparkSQL para acceder a los datos en Parquet y hacer analysis interactiva.
@@ -39,9 +45,13 @@ spark-shell
 ```
 
 ```scala
+// reduce log noise
+sc.setLogLevel("ERROR")
+
 import spark.implicits._
 val df = spark.read.parquet("/dataset/output.parquet")
 df.show
+df.printSchema
 
 df.createOrReplaceTempView("stocks")
 
@@ -54,6 +64,22 @@ badHighestClosingPrice.show
 val highestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM stocks WHERE year=2017 AND month=9 GROUP BY symbol")
 highestClosingPrice.explain
 highestClosingPrice.show
+```
+
+## Ver los datos en Postgres
+El batch job también escribe una tabla `stocks` en Postgres que se puede acceder:
+
+```
+# abrir otra consola
+
+docker exec -it postgres bash
+
+psql -U workshop workshop
+workshop=# \d
+...
+...
+
+workshop=# SELECT * FROM stocks LIMIT 10;
 ```
 
 ## Creando un Dashboard con Superset

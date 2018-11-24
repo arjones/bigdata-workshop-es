@@ -8,3 +8,5 @@ streaming.parquet
 *.iso
 dataset/output.parquet/
 *.ova
+superset/conf/.setup-complete
+superset/conf/superset.db
