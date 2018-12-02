@@ -155,6 +155,8 @@ object ReadSymbolLookup {
       option("header", true).
       option("inferSchema", true).
       csv(file).
+      //      filter("Country = \"USA\"").
+      //      filter($"Country" === "USA").
       select($"Ticker", $"Category Name").
       withColumnRenamed("Ticker", "symbol").
       withColumnRenamed("Category Name", "category")

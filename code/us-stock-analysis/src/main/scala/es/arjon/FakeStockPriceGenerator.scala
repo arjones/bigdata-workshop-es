@@ -40,7 +40,7 @@ object FakeStockPriceGenerator extends App {
   var counter = 0
 
   while (true) {
-    val stock = nextSymbol
+    val stock = nextSymbol()
     val data = new ProducerRecord[String, String](topic, null, stock)
 
     producer.send(data)
@@ -53,7 +53,7 @@ object FakeStockPriceGenerator extends App {
   producer.close()
 
 
-  def nextSymbol: String = {
+  def nextSymbol(): String = {
     // a very naive impl of marketing hours
     // not consider weekends nor holidays
     def nextMarketTime = {
@@ -104,7 +104,7 @@ object FakeStockPriceGenerator extends App {
 
     val quote = quotes(rnd.nextInt(quotes.size))
 
-    val price = quote.price + (signal * rnd.nextDouble * quote.volatility)
+    val price = quote.price + (signal * rnd.nextDouble * quote.volatility * 3)
 
     //
     f"""{"symbol":"${quote.symbol}","timestamp":"${nextMarketTime}","price":$price%2.3f}"""
