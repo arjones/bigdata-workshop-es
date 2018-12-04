@@ -8,7 +8,7 @@ sbt clean assembly
 
 spark-submit \
   --class es.arjon.CreditRiskTrain \
-  --master 'local[*]' \
+  --master 'spark://master:7077' \
   target/scala-2.11/credit-risk-analysis-assembly-0.1.jar \
   /dataset/credit-risk/germancredit.csv \
   /dataset/credit-risk.model
@@ -17,7 +17,7 @@ spark-submit \
 
 spark-submit \
   --class es.arjon.CreditRiskAnalysis \
-  --master 'local[*]' \
+  --master 'spark://master:7077' \
   target/scala-2.11/credit-risk-analysis-assembly-0.1.jar \
   /dataset/credit-risk/germancredit-user-input.csv \
   /dataset/credit-risk.model
