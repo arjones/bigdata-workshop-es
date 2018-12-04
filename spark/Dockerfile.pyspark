@@ -6,7 +6,7 @@ WORKDIR /notebook
 RUN apt-get update && \
   apt-get install --no-install-suggests -y python3 python3-pip && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.5 10 && \
-  pip3 install --default-timeout=120 jupyter findspark pandas matplotlib && \
+  pip3 install --no-cache-dir --default-timeout=120 jupyter findspark pandas matplotlib && \
   apt remove -y --purge python3-pip && \
   rm -rf /var/lib/apt/lists/*
 
