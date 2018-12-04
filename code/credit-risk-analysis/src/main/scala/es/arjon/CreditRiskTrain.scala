@@ -56,10 +56,24 @@ object CreditRiskTrain extends DatasetUtil {
 
     // Add Label Identifiers field to the DF
     val dfLabeled = labelIndexer.fit(dfVector).transform(dfVector)
+
+    //    Manually transforming
+    //        def convertCreditability(v: String) = if (v =="YES") 1.0 else 0.0
+    //        val convertCreditabilityUDF = udf(convertCreditability _)
+    //        val dfLabeled = dfVector.withColumn("label2", convertCreditabilityUDF($"creditability"))
+
     dfLabeled.select($"features", $"label", $"creditability").show(30, false)
 
+    // remove unused fields
+    val dfInput = dfLabeled.select($"features", $"label")
+
+
     val splitSeed = 5043
-    val Array(trainingData, testData) = dfLabeled.randomSplit(Array(0.7, 0.3), splitSeed)
+    val Array(trainingDataUncached, testData) = dfInput.randomSplit(Array(0.7, 0.3), splitSeed)
+
+    // Try to run with & without cache()
+    // val trainingData = trainingDataUncached.cache()
+    val trainingData = trainingDataUncached
 
     val classifier = new RandomForestClassifier().
       setImpurity("gini").
@@ -80,6 +94,8 @@ object CreditRiskTrain extends DatasetUtil {
     println(f"Accuracy: $accuracy%2.3f")
     printPredictionMetrics(predictions)
 
+    // Save the model to latter use
+    model.write.overwrite().save(modelPath)
 
     // Let's try to do better
     val paramGrid = new ParamGridBuilder().
@@ -121,13 +137,8 @@ object CreditRiskTrain extends DatasetUtil {
 
     printPredictionMetrics(predictions2)
 
-
-    // Save the model to latter use
-    model.write.overwrite().save(modelPath)
-
-    // load it again
-    // val sameModel = RandomForestClassificationModel.load("data/credit.model")
-
+    // Not saving the final model...
+//
   }
 
   def printPredictionMetrics(predictions: DataFrame)(implicit spark: SparkSession) {
