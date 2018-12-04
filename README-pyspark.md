@@ -14,7 +14,7 @@ for line in file.take(10):
 ```
 
 ## Usando Jupyter Notebook
-Acceda al [Jupyter Notebook aqui](http://localhost:8888/)
+Acceda al [Jupyter Notebook aqui](http://localhost:8888/), los notebook disponibles en ese workshop [están en Github](https://github.com/arjones/bigdata-workshop-es/tree/master/jupyter/notebook)
 
 ## Material de lectura:
 

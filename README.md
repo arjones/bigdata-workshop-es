@@ -16,7 +16,7 @@ El workshop simula una instalación de producción utilizando container de Docke
 * Postgres:
 * [Superset](http://superset.incubator.apache.org) [Dashboard](http://localhost:8088/)
 
-Los puertos de acceso a cada servicio quedaron los defaults. Ej: spark-master:7077, postgres: 5432
+Los puertos de acceso a cada servicio quedaron los defaults. Ej: **spark master:7077**, **postgres: 5432**
 
 ## Levantar ambiente
 Instalar [Docker >= 17.03](https://www.docker.com/community-edition).
