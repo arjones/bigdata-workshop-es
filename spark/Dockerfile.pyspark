@@ -3,12 +3,15 @@ FROM arjones/spark:${SPARK_VERSION}
 
 WORKDIR /notebook
 
+COPY requirements.txt /tmp/
+
 RUN apt-get update && \
-  apt-get install --no-install-suggests -y python3 python3-pip && \
+  apt-get --no-install-recommends --no-install-suggests install -y \
+  python3 python3-pip python3-setuptools && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.5 10 && \
-  pip3 install --no-cache-dir --default-timeout=120 jupyter findspark pandas matplotlib && \
+  pip3 install --no-cache-dir --default-timeout=120 -r /tmp/requirements.txt && \
   apt remove -y --purge python3-pip && \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /tmp/requirements.txt /var/lib/apt/lists/*
 
 CMD [ "/usr/local/bin/jupyter", "notebook", "--allow-root", "--no-browser", "--ip=0.0.0.0", "--NotebookApp.token="]
 

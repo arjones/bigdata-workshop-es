@@ -4,7 +4,7 @@ WORKDIR /app
 
 ARG SPARK_VERSION=2.1.3
 
-ENV SPARK_HOME=/opt/spark
+ENV SPARK_HOME /opt/spark
 
 RUN apt-get update && \
   apt-get install -y wget ca-certificates procps && \
