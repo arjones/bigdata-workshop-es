@@ -14,7 +14,7 @@ El workshop simula una instalación de producción utilizando container de Docke
 * Apache Spark: [Spark Master UI](http://localhost:8080) | [Job Progress](http://localhost:4040)
 * Apache Kafka:
 * Postgres:
-* [Superset](http://superset.incubator.apache.org) [Dashboard](http://localhost:8088/)
+* [Superset](http://superset.incubator.apache.org): [Nuestro Dashboard](http://localhost:8088/)
 
 Los puertos de acceso a cada servicio quedaron los defaults. Ej: **spark master:7077**, **postgres: 5432**
 
@@ -53,5 +53,5 @@ Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória d
 * [Batch Processing](README-batch.md)
 
 ## Sobre
-Gustavo Arjones &copy; 2017-2018  
+Gustavo Arjones &copy; 2017-2019  
 [arjon.es](https://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)

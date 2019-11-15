@@ -3,7 +3,7 @@
 How to build and push the Spark Image:
 
 ```bash
-SPARK_VERSION=2.1.3
+SPARK_VERSION=2.4.4
 
 docker build \
   --build-arg SPARK_VERSION=${SPARK_VERSION} \

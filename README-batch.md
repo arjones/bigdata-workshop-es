@@ -101,4 +101,4 @@ workshop=# SELECT * FROM stocks LIMIT 10;
 
 
 ____
-Gustavo Arjones &copy; 2017-2018
+Gustavo Arjones &copy; 2017-2019

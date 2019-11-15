@@ -58,4 +58,4 @@ Modificar el codigo para tomar la entrada de **Kafka** y escribir en **Postgres*
 * [Original: Analysis of German Credit Data](https://onlinecourses.science.psu.edu/stat857/node/215)
 
 ____
-Gustavo Arjones &copy; 2017-2018
+Gustavo Arjones &copy; 2017-2019

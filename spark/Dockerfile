@@ -2,7 +2,7 @@ FROM openjdk:8-jre-slim
 
 WORKDIR /app
 
-ARG SPARK_VERSION=2.1.3
+ARG SPARK_VERSION=2.4.4
 
 ENV SPARK_HOME /opt/spark
 
