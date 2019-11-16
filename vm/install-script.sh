@@ -5,12 +5,23 @@ echo "%sudo ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 sudo apt-get update
 sudo apt-get install -y openssh-server
 
-# Basics
-sudo apt-get install -y \
-  git \
-  openjdk-8-jdk \
-  maven \
-  scala
+# Remove/Install JVM
+sudo apt-get -y remove openjdk*
+sudo apt-get -y remove --auto-remove openjdk*
+sudo apt-get -y purge openjdk*
+
+sudo apt-get install -y openjdk-8-jdk
+
+# Git
+sudo apt-get install -y git \
+  maven
+
+## Scala
+sudo apt-get remove scala-library scala
+sudo wget https://downloads.lightbend.com/scala/2.12.10/scala-2.12.10.deb
+sudo dpkg -i scala-2.12.10.deb
+sudo apt-get update
+sudo apt-get install scala
 
 # SBT
 echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
