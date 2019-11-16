@@ -36,13 +36,15 @@ docker exec -it kafka bash
 ## Submit de un job
 Conectarse al Spark-Master y hacer submit del programa
 
+**NOTA:** Utilizar `--total-executor-cores` con la mitad de cores de tu computadora, ej: si tiene 4 cores, utilizar `2`.
+
 ```bash
 docker exec -it master bash
 
 cd /app/us-stock-analysis
 spark-submit --master 'spark://master:7077' \
   --class "es.arjon.StreamingETL" \
-  --total-executor-cores 2 \
+  --total-executor-cores 1 \
   target/scala-2.11/us-stock-analysis-assembly-0.1.jar \
   kafka:9092 stocks
 ```
@@ -51,7 +53,7 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI
 ## En otra consola, acceder al dataset de Streaming
 ```bash
 docker exec -it master bash
-spark-shell --total-executor-cores 2
+spark-shell --total-executor-cores 1
 ```
 
 ```scala

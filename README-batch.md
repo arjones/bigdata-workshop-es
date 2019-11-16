@@ -56,7 +56,7 @@ df.printSchema
 df.createOrReplaceTempView("stocks")
 
 // No usando particiones
-val badHighestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM stocks WHERE full_date > '2017-09-01' GROUP BY symbol")
+val badHighestClosingPrice = spark.sql("SELECT symbol, MAX(close) AS price FROM stocks WHERE full_date >= '2017-09-01' AND full_date < '2017-10-01' GROUP BY symbol")
 badHighestClosingPrice.explain
 badHighestClosingPrice.show
 
