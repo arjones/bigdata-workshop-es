@@ -25,4 +25,4 @@ spark-submit \
 
 # Acknowledge
 The original author of this tutorial is **Carol McDonald <caroljmcdonald@gmail.com>** for the MapR article: [Predicting Loan Credit Risk using Apache Spark Machine Learning Random Forests](https://mapr.com/blog/predicting-loan-credit-risk-using-apache-spark-machine-learning-random-forests/), 
-I updated the API version (Spark 2.1.2) and made changes on the code to clarify/reduce duplication.  
+I updated the API version (Spark 2.4.4) and made changes on the code to clarify/reduce duplication.  

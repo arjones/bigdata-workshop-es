@@ -2,13 +2,13 @@
 Material del Workshop de Big Data
 
 ## Machine Learning Lib
-Usando un dataset de [Credito Alemán](https://archive.ics.uci.edu/ml/datasets/Statlog+(German+Credit+Data)) se entrenará un algoritmo de [Clasificación Random Forest](https://spark.apache.org/docs/2.1.2/ml-classification-regression.html#random-forest-classifier) y se buscará predecir el valor `Creditable` que significa **brindar credito**.
+Usando un dataset de [Credito Alemán](https://archive.ics.uci.edu/ml/datasets/Statlog+(German+Credit+Data)) se entrenará un algoritmo de [Clasificación Random Forest](https://spark.apache.org/docs/2.4.4/ml-classification-regression.html#random-forest-classifier) y se buscará predecir el valor `Creditable` que significa **brindar credito**.
 
 ## Codigo
 * [Analisis de risco de credito](code/credit-risk-analysis) (credit-risk-analysis)
 
 ## Realizar el entrenamiento
-La clase [CreditRiskTrain.scala](code/credit-risk-analysis/src/main/scala/es/arjon/CreditRiskTrain.scala) hace las transformaciones de los datos de entrada para generar el modelo de Random Forest. También intentamos mejorar el modelo utilizando [CrossValidator](https://spark.apache.org/docs/2.1.2/ml-tuning.html#cross-validation)
+La clase [CreditRiskTrain.scala](code/credit-risk-analysis/src/main/scala/es/arjon/CreditRiskTrain.scala) hace las transformaciones de los datos de entrada para generar el modelo de Random Forest. También intentamos mejorar el modelo utilizando [CrossValidator](https://spark.apache.org/docs/2.4.4/ml-tuning.html#cross-validation)
 
 ```bash
 # Compilar el proyecto

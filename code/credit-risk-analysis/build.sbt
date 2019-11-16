@@ -4,13 +4,13 @@ name := "credit-risk-analysis"
 
 version := "0.1"
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.10"
 
 scalacOptions += "-target:jvm-1.8"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-sql" % "2.1.2" % "provided",
-  "org.apache.spark" %% "spark-mllib" % "2.1.2" % "provided",
+  "org.apache.spark" %% "spark-sql" % "2.4.4" % "provided",
+  "org.apache.spark" %% "spark-mllib" % "2.4.4" % "provided",
 
   "com.github.fommil.netlib" % "all" % "1.1.2" pomOnly()
 )
