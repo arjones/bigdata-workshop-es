@@ -4,7 +4,7 @@ name := "us-stock-analysis"
 
 version := "0.1"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.11.12"
 
 scalacOptions += "-target:jvm-1.8"
 

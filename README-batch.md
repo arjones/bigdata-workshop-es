@@ -24,7 +24,7 @@ cd /app/us-stock-analysis
 spark-submit --master 'spark://master:7077' \
   --class "es.arjon.RunAll" \
   --driver-class-path /app/postgresql-42.1.4.jar \
-  target/scala-2.12/us-stock-analysis-assembly-0.1.jar \
+  target/scala-2.11/us-stock-analysis-assembly-0.1.jar \
   /dataset/stocks-small /dataset/yahoo-symbols-201709.csv /dataset/output.parquet
 ```
 Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI

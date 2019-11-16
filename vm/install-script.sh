@@ -17,11 +17,16 @@ sudo apt-get install -y git \
   maven
 
 ## Scala
-sudo apt-get remove scala-library scala
-sudo wget https://downloads.lightbend.com/scala/2.12.10/scala-2.12.10.deb
-sudo dpkg -i scala-2.12.10.deb
+# IMPORTANT: Make sure scala version is the same as Spark 
+# have been compiled to. Run spark-shell
+# 
+sudo apt-get -y remove --auto-remove scala-library scala
+sudo apt-get -y purge scala-library* scala*
+
+sudo wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb
+sudo dpkg -i scala-2.11.12.deb
 sudo apt-get update
-sudo apt-get install scala
+sudo apt-get -y install scala
 
 # SBT
 echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
