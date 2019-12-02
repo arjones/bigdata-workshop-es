@@ -19,7 +19,9 @@ El workshop simula una instalación de producción utilizando container de Docke
 Los puertos de acceso a cada servicio quedaron los defaults. Ej: **spark master:7077**, **postgres: 5432**
 
 ## Levantar ambiente
-Instalar [Docker >= 17.03](https://www.docker.com/community-edition).
+
+Instalar el ambiente [siguiendo las instrucciones acá](INSTALL.md).
+
 Correr el script que levanta el ambiente `Usage: control-env.sh (start|stop|cleanup)`:
 
 ```bash
