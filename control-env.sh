@@ -17,11 +17,6 @@ function start {
 
 function info {
   echo '
-
-  To check logs use:
-  docker-compose --project-name wksp logs -f
-
-
   Everything is ready, access http://localhost/ to learn more
   '
 }
@@ -41,8 +36,12 @@ case $1 in
   cleanup
     ;;
 
+  logs )
+  docker-compose --project-name wksp logs -f
+    ;;
+
   * )
-  printf "ERROR: Missing command\n  Usage: `basename $0` (start|stop|cleanup)\n"
+  printf "ERROR: Missing command\n  Usage: `basename $0` (start|stop|cleanup|logs)\n"
   exit 1
     ;;
 esac

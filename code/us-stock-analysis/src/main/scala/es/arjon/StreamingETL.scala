@@ -1,7 +1,7 @@
 package es.arjon
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.streaming.{OutputMode, ProcessingTime}
+import org.apache.spark.sql.streaming.{OutputMode, ProcessingTime, Trigger}
 import org.apache.spark.sql.types._
 
 
@@ -72,12 +72,13 @@ object StreamingETL extends App {
     option("startingOffsets", "earliest").
     option("checkpointLocation", "/dataset/checkpoint").
     option("path", "/dataset/streaming.parquet").
-    trigger(ProcessingTime("30 seconds")).
+    trigger(Trigger.ProcessingTime("30 seconds")).
     start()
 
   // There is no JDBC sink for now!
   // https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html
   //
+  stocks.writeStream.format()
 
   // Using as an ordinary DF
   val avgPricing = stocks.
@@ -88,7 +89,7 @@ object StreamingETL extends App {
   val query = avgPricing.writeStream.
     outputMode(OutputMode.Complete).
     format("console").
-    trigger(ProcessingTime("10 seconds")).
+    trigger(Trigger.ProcessingTime("10 seconds")).
     start()
 
   // Have all the aggregates in an in-memory table
