@@ -1,7 +1,7 @@
 package es.arjon
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.streaming.{OutputMode, ProcessingTime, Trigger}
+import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types._
 
 
@@ -77,8 +77,6 @@ object StreamingETL extends App {
 
   // There is no JDBC sink for now!
   // https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html
-  //
-  stocks.writeStream.format()
 
   // Using as an ordinary DF
   val avgPricing = stocks.
