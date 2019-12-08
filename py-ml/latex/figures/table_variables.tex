@@ -1,0 +1,53 @@
+\documentclass{standalone}
+
+%-----------------------+
+% Clean auxiliary files |
+%-----------------------+
+% arara: clean: {files: [table_variables.aux, table_variables.log, table_variables.synctex.gz]}
+
+%------------------------------------+
+% Language, hyphenation and encoding |
+%------------------------------------+
+\usepackage{lmodern}                      % Use Latin Modern fonts
+% \renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
+\usepackage[T1]{fontenc}        % Better output when a diacritic/accent is used
+\usepackage[utf8]{inputenc}               % Allows to input accented characters
+
+%----------------+
+% Table packages |
+%----------------+
+\usepackage{array}          % Flexible column formatting
+% \usepackage{spreadtab}  % Spreadsheet features
+\usepackage{multirow}       % Allows table cells that span more than one row
+\usepackage{booktabs}       % Enhance quality of tables
+\setlength{\heavyrulewidth}{1pt}
+
+\usepackage{siunitx}        % Typeset units correctly and define new column (S)
+\sisetup{detect-all,table-auto-round,input-symbols = {()}}
+% \robustify{\bfseries}     % Correct alignment of bold numbers in tables
+
+% Table colors
+\usepackage[table,x11names]{xcolor}
+
+\begin{document}
+\begin{tabular}{lll}
+  \toprule
+  Variable & Descripción  & Notas \\
+  \midrule
+   survived & Condición de superviviencia & 1 = Si, 0 = No\\
+   pclass & Tipo de ticket &  1= Alto, 2= Medio, 3 = Bajo  \\
+   name & Nombre del pasajero & \\
+   sex & Sexo  & \\
+   age & Edad en años & Fracción si < 1 y xx.5 si estimada\\
+   sibsp & \# hermanos y conyuges a bordo &  \\
+   parch & \# padres e hijos a bordo &  Hijos con niñera tiene parch=0\\
+   ticket & \# de boleto & \\
+   fare & Precio del boleto & \\
+   cabin & \# de cabina & \\
+   embarked & Puerto de embarque & C=Cherbourg, Q=Queenstown, S=Southhampton\\
+   boat & \# bote de rescate & \\ 
+   home.dest & Ciudad de origen & \\ 
+   body & \# Número de identificación cadáver \\
+  \bottomrule
+\end{tabular}
+\end{document}
