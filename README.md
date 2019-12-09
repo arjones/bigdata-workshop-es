@@ -46,7 +46,7 @@ Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
 
 Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória disponible para Docker, **aumente la memoria > 8Gb** al proceso de Docker:
 
-![](docker-advanced-config.jpg)
+![](./images/docker-advanced-config.jpg)
 
 #### Alternativamente se puede probar usando la consola de [pySpark](README-pyspark.md)
 

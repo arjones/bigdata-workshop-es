@@ -84,17 +84,9 @@ workshop=# SELECT * FROM stocks LIMIT 10;
 
 ## Creando un Dashboard con Superset
 
-* Acceder a http://localhost:8088/, user: `admin`, pass: `superset`.
-* Agregar el database (Sources > Databases):
-  - Database: `Workshop`
-  - SQLAlchemy URI: `postgresql://workshop:w0rkzh0p@postgres/workshop`
-  - OK
-* Agregar tabla (Sources > Tables) :
-  - Database: `workshop`
-  - Table Name: `stocks`
-* Create Slices & Dashboard [official docs](https://superset.incubator.apache.org/tutorial.html#creating-a-slice-and-dashboard)
+* [Como configurar Superset](./README-superset.md)
+* [Sitio Oficial Superset](https://superset.apache.org/)
 
-![Superset Dashboard Example](superset.png)
 
 ## Siga leyendo
 * [Structured Streaming Processing](README-streaming.md)
