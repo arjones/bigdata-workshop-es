@@ -1153,7 +1153,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \begin{frame}
   \frametitle{Extracción de datos para clasificación}
   \begin{center}
-    \includegraphics[scale=0.3]{titanic.jpg}
+    \includegraphics[scale=0.33]{titanic.jpg}
   \end{center}
   \begin{itemize}
     \item Objetivo: predecir (un subconjunto) sobrevivientes del Titanic (usando machine
@@ -1168,6 +1168,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
                 \item Agregue lógica de cache que reuse la copia local del
                   conjunto de datos, en caso que esta exista, y evite de ese
                   modo consultar repetidas veces el enlace de arriba.
+                \item Renombre la columna `home.dest` a `home\_dest`.
                 \item Parta este conjunto de datos de forma aleatoria en dos
                   partes de manera tal que un subconjunto tenga el 70\% de los
                   registros.
