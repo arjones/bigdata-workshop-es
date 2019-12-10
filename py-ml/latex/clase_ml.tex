@@ -353,10 +353,11 @@ pdfkeywords={python, machine learning}
 \makeatother
 
 % Actually define maketitle
-\title[Intro ML Python]{Introducción Práctica a Machine Learning con Python}
-\subtitle{Mutt - Claro}
-\author[]{Mutt Data}
-\institute[]{8 de Noviembre de 2019}
+\title[Intro ML Python]{Introducción Práctica a Machine Learning con Python y
+Spark}
+\subtitle{Especialización en Ciencia de Datos - ITBA}
+\author[]{Workshop de Big Data}
+\institute[]{12 de Diciembre de 2019}
 \date[]{\includegraphics[scale=0.07]{logo_mutt.png}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
@@ -402,7 +403,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 
 \frame[plain]{\titlepage}
 
-\section{Un poco de (necesario) contexto teórico}
+\section{Un breve repaso del (necesario) contexto teórico}
 \label{sec:un_poco_de_contexto_teorico}
 
 \begin{frame}
@@ -1161,18 +1162,18 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
             \item Ejercicio 1: extracción de datos del hundimiento del Titanic
               \begin{enumerate}
                 \item Escriba una función que obtenga, a partir de
-                  \href{http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.csv}{este
-                  enlace} y utilizando Pandas, el conjunto de datos de pasajeros
-                  involucrados en el hundimiento del Titanic.
+                  \href{http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.csv}{http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.csv} y utilizando Pandas, el conjunto de datos de pasajeros
+                  involucrados en el hundimiento del Titanic y lo guarde en un
+                  un archivo \texttt{titanic_local.csv}.
+                \item Agregue lógica de cache que reuse la copia local del
+                  conjunto de datos, en caso que esta exista, y evite de ese
+                  modo consultar repetidas veces el enlace de arriba.
                 \item Parta este conjunto de datos de forma aleatoria en dos
                   partes de manera tal que un subconjunto tenga el 70\% de los
                   registros.
                 \item ¿Cómo puede garantizar que lo hecho en el inciso anterior
                   sea replicable?  Fije la semilla del generador de números
                   aleatorios en \texttt{1234.}
-                \item Agregue lógica de cache para guardar una copia local del
-                  conjunto de datos y evitar consultar repetidas veces el enlace
-                  de arriba.
               \end{enumerate}
         \end{enumerate}
   \end{itemize}
@@ -1180,13 +1181,16 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \begin{frame}
   \frametitle{Descripción de variables y preprocesamiento}
   \begin{center}
-    \includegraphics[scale=0.7]{table_variables.pdf}
+    \includegraphics[scale=0.65]{table_variables.pdf}
   \end{center}
   \begin{itemize}
     \item En base a esta tabla:
       \begin{itemize}
         \item Ejercicio 2: Primer preproceso / EDA
           \begin{enumerate}
+            \item Escriba una función que permita convertir (\textit{castear})
+              múltiples columnas de un tipo de dato a otro y utilícela para
+              asegurar que sus datos sean consistentes con la tabla arriba.
             \item ¿Qué variables puede usted ignorar? ¿Por qué? Escriba una
               función que reciba un dataframe y una lista de columnas
               a eliminar y devuelva un el data frame sin estas columnas.
@@ -1195,7 +1199,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
               dataframe con una columna de booleanos indicando pertenencia al
               conjunto de entrenamiento. ¿Por qué tiene sentido trabajar con un
               set de datos de esta forma?
-            \item ¿Tiene clases desbalanceadas? Haga un histograma para
+            \item ¿Tiene clases desbalanceadas? Haga un gráfico de barras para
               responder esta pregunta.
           \end{enumerate}
       \end{itemize}
