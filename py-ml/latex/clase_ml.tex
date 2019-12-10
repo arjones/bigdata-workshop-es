@@ -1181,7 +1181,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \begin{frame}
   \frametitle{Descripción de variables y preprocesamiento}
   \begin{center}
-    \includegraphics[scale=0.65]{table_variables.pdf}
+    \includegraphics[scale=0.6]{table_variables.pdf}
   \end{center}
   \begin{itemize}
     \item En base a esta tabla:
@@ -1214,8 +1214,8 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
         \item Veamos primero correlaciones de los atributos numéricos
         \begin{minted}{python}
         import seaborn as sns
-        g = sns.heatmap(df[['survived', 'age', 'parch', 'fare', 'sibsp']].corr(),
-                        annot=True, fmt = ".2f", cmap = "coolwarm")
+        g = sns.heatmap(df.select('survived', 'age', 'parch', 'fare', 'sibsp')
+                        .toPandas().corr(), annot=True, fmt = ".2f", cmap = "coolwarm")
         \end{minted}
         \begin{center}
           \includegraphics[scale=0.15]{corr.png}
@@ -1238,16 +1238,17 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \begin{frame}[fragile]
   \frametitle{Aun más EDA (y ejercicios)}
     \begin{minted}{python}
-    g = sns.kdeplot(df['age'][(df['survived'] == 0) &
-                                (df['age'].notnull())], color='Red', shade = True)
-    g = sns.kdeplot(df['age'][(df['survived'] == 1) &
-                                (df['age'].notnull())], color='Blue', shade = True)
+    survived_age = df.filter((f.col('survived') == 1) & 
+                   (f.col('age').isNotNull())).select('age').toPandas()
+    ...
+    g = sns.kdeplot(not_survived_age.squeeze(), color='Red', shade=True)
+    g = sns.kdeplot(survived_age.squeeze(), color='Blue', shade=True)
     g.set_xlabel('age')
     g.set_ylabel('Frequency')
-    g = g.legend(['Not Survived', 'Survived'])
+    g.legend(['Not Survived', 'Survived'])
     \end{minted}
     \begin{center}
-      \includegraphics[scale=0.13]{kde.png}
+      \includegraphics[scale=0.12]{kde.png}
     \end{center}
   \begin{itemize}
     \item Ejercicio 3: Visualizaciones como herramienta de EDA
