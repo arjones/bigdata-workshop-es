@@ -7,8 +7,6 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
 object FakeStockPriceGenerator extends App {
   val rnd = new scala.util.Random(42)
-  // This is when Dataset ends
-  // var tradingBeginOfTime = ZonedDateTime.parse("2017-11-11T10:00:00Z")
 
   if (args.length < 2 || args.length > 3) {
     System.err.println(
@@ -25,6 +23,7 @@ object FakeStockPriceGenerator extends App {
 
   val brokers = args(0)
   val topic = args(1)
+  // Default date is when Batch dataset ends
   val tradingStartParam = if (args.length == 3) args(2) else "2017-11-11T10:00:00Z"
 
   var tradingBeginOfTime = ZonedDateTime.parse(tradingStartParam)
