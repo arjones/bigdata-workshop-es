@@ -8,21 +8,26 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 object FakeStockPriceGenerator extends App {
   val rnd = new scala.util.Random(42)
   // This is when Dataset ends
-  var tradingBeginOfTime = ZonedDateTime.parse("2017-11-11T10:00:00Z")
+  // var tradingBeginOfTime = ZonedDateTime.parse("2017-11-11T10:00:00Z")
 
-  if (args.length < 2) {
+  if (args.length < 2 || args.length > 3) {
     System.err.println(
       s"""
-         |Usage: FakeStockPriceGenerator <brokers> <topics>
+         |Usage: FakeStockPriceGenerator <brokers> <topics> <start_date>
          |  <brokers> is a list of one or more Kafka brokers
          |  <topic> one kafka topic to produce to
+         |  <start_date> [OPTIONAL] iso timestamp from when to start producing data
          |
-         |  FakeStockPriceGenerator kafka:9092 stocks
+         |  FakeStockPriceGenerator kafka:9092 stocks 2017-11-11T10:00:00Z
         """.stripMargin)
     System.exit(1)
   }
 
-  val Array(brokers, topic) = args
+  val brokers = args(0)
+  val topic = args(1)
+  val tradingStartParam = if (args.length == 3) args(2) else "2017-11-11T10:00:00Z"
+
+  var tradingBeginOfTime = ZonedDateTime.parse(tradingStartParam)
 
   println(
     s"""
@@ -58,6 +63,7 @@ object FakeStockPriceGenerator extends App {
     // not consider weekends nor holidays
     def nextMarketTime = {
       val tick = 3
+      // TODO: add ability to generate out of order data
       val proposedNextTime = tradingBeginOfTime.plusMinutes(tick)
       val nextTime = if (proposedNextTime.getHour > 15)
         proposedNextTime.plusDays(1).withHour(10).withMinute(0)

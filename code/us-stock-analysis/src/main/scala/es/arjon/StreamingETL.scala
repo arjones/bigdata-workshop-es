@@ -75,8 +75,8 @@ object StreamingETL extends App {
     trigger(Trigger.ProcessingTime("30 seconds")).
     start()
 
-  // There is no JDBC sink for now!
-  // https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html
+  //TODO: use ForEachBatch to write to Postgres in Append mode
+  // https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#foreachbatch
 
   // Using as an ordinary DF
   val avgPricing = stocks.
