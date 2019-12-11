@@ -1,8 +1,15 @@
 package es.arjon
 
+import java.util.Properties
+
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.udf
 import org.apache.spark.sql.streaming.{OutputMode, Trigger}
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
+import org.apache.spark.sql.SaveMode
+
 
 
 object StreamingETL extends App {
@@ -35,8 +42,9 @@ object StreamingETL extends App {
     format("kafka").
     option("kafka.bootstrap.servers", brokers).
     option("subscribe", topics).
+    //option("startingOffsets", "earliest").
     load()
-  //    option("startingOffsets", "earliest").
+  
 
   jsons.printSchema
 
@@ -60,7 +68,7 @@ object StreamingETL extends App {
   stocks.printSchema
 
   // Write to Parquet
-  stocks.
+  val query = stocks.
     withColumn("year", year($"timestamp")).
     withColumn("month", month($"timestamp")).
     withColumn("day", dayofmonth($"timestamp")).
@@ -74,31 +82,80 @@ object StreamingETL extends App {
     option("path", "/dataset/streaming.parquet").
     trigger(Trigger.ProcessingTime("30 seconds")).
     start()
+  query.awaitTermination()
 
-  //TODO: use ForEachBatch to write to Postgres in Append mode
-  // https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#foreachbatch
+  // AverageStocksToPostgres.process(spark, stocks)
 
   // Using as an ordinary DF
-  val avgPricing = stocks.
-    groupBy($"symbol").
-    agg(avg($"price").as("avg_price"))
+  // val avgPricing = stocks.
+  //   groupBy($"symbol").
+  //   agg(avg($"price").as("avg_price"))
+
+
+  // avgPricing.printSchema
 
   // Start running the query that prints the running results to the console
-  val query = avgPricing.writeStream.
-    outputMode(OutputMode.Complete).
-    format("console").
-    trigger(Trigger.ProcessingTime("10 seconds")).
-    start()
+  // val query = avgPricing.writeStream.
+  //   outputMode(OutputMode.Complete).
+  //   format("console").
+  //   trigger(Trigger.ProcessingTime("10 seconds")).
+  //   start()
+  // query.awaitTermination()
 
-  // Have all the aggregates in an in-memory table
-  //  avgPricing
+  // // Have all the aggregates in an in-memory table
+  // val query = avgPricing
   //    .writeStream
   //    .queryName("avgPricing")    // this query name will be the table name
   //    .outputMode("complete")
   //    .format("memory")
+  //    .trigger(Trigger.ProcessingTime("10 seconds"))
   //    .start()
-  //
-  //  spark.sql("select * from avgPricing").show()   // interactively query in-memory table
+  
+  // while (true) {
+  //   Thread.sleep(10 * 1000)     
+  //   // interactively query in-memory table
+  //   spark.sql("select * from avgPricing").show()
+  //   //println(query.lastProgress)
+  // }
 
-  query.awaitTermination()
+  // query.awaitTermination()
+}
+
+
+object AverageStocksToPostgres {
+
+  def process(spark: SparkSession, stocks: DataFrame): Unit = {
+
+  import org.apache.spark.sql.functions._
+  import spark.implicits._ 
+  
+  val avgPricing = stocks.
+    withWatermark("timestamp", "60 seconds").
+    groupBy( window($"timestamp", "30 seconds"),
+      $"symbol").
+    agg(avg($"price").as("avg_price"))
+
+
+  avgPricing.printSchema
+
+  val connectionProperties = new Properties()
+  connectionProperties.put("user", "workshop")
+  connectionProperties.put("password", "w0rkzh0p")
+  connectionProperties.put("driver", "org.postgresql.Driver")
+  
+
+  val winToString = udf{(window:GenericRowWithSchema) => window.mkString("-")}
+
+  val processAvgTickers = avgPricing.
+    withColumn("window", winToString($"window")).
+    writeStream.
+    foreachBatch { (batchDF: DataFrame, batchId: Long) =>
+        batchDF.write.mode(SaveMode.Append).jdbc(s"jdbc:postgresql://postgres:5432/workshop", "workshop.test_streaming_inserts_avg_price", connectionProperties)
+    }.
+    trigger(Trigger.ProcessingTime("10 seconds")).
+    start()
+
+  processAvgTickers.awaitTermination()    
+
+  }
 }

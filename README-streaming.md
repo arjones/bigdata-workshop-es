@@ -62,6 +62,48 @@ val df = spark.read.parquet("/dataset/streaming.parquet")
 df.show
 ```
 
+## Utilizar Spark SQL y el Sink in Memory
+
+En el archivo `StreamingETL.scala` comentar las líneas 71 a la 85 para evitar que se escriba en el archivo de output Parquet y descomentar las líneas de código de 90 al 103.
+
+Compilar la aplicación de nuevo con: 
+
+```bash
+sbt assembly
+```
+
+Probar y observar el output por consola.
+
+Luego comentar las líneas 98 a 103 y descomentar 106 a 121, compilar y ejecutar probar. Qué diferencia observa?
+
+
+## Streaming Spark SQL + Insert a Postgres
+
+Comentar las líneas 106 a 121 y descomentar la línea
+
+```scala
+AverageStocksToPostgres.process(spark, stocks)
+```
+
+En otra tab ingresar al container de Postgres y luego al utilitario de línea de comando `psql`
+
+```bash
+docker exec -it postgres bash
+psql --host localhost --d workshop --username workshop
+```
+
+Crear la tabla para recibir los inserts
+
+```sql
+
+CREATE TABLE test_streaming_inserts_avg_price (
+    "window" varchar(128),
+    symbol varchar(10),
+    avg_price real
+);
+```
+
+
 ## Más información
 * [Real-time Streaming ETL with Structured Streaming in Apache Spark 2.1](https://databricks.com/blog/2017/01/19/real-time-streaming-etl-structured-streaming-apache-spark-2-1.html)
 * [Processing Data in Apache Kafka with Structured Streaming in Apache Spark 2.2](https://databricks.com/blog/2017/04/26/processing-data-in-apache-kafka-with-structured-streaming-in-apache-spark-2-2.html)

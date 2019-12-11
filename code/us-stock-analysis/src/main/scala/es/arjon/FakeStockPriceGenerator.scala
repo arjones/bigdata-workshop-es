@@ -23,7 +23,8 @@ object FakeStockPriceGenerator extends App {
 
   val brokers = args(0)
   val topic = args(1)
-  // Default date is when Batch dataset ends
+
+  // The default vauel is when the batch sample data ends
   val tradingStartParam = if (args.length == 3) args(2) else "2017-11-11T10:00:00Z"
 
   var tradingBeginOfTime = ZonedDateTime.parse(tradingStartParam)
@@ -61,8 +62,9 @@ object FakeStockPriceGenerator extends App {
     // a very naive impl of marketing hours
     // not consider weekends nor holidays
     def nextMarketTime = {
-      val tick = 3
-      // TODO: add ability to generate out of order data
+      // val tick = 3
+      // Sometimes it substracts 1 and generates late arriving tickers  
+      val tick = rnd.nextInt(5)-1
       val proposedNextTime = tradingBeginOfTime.plusMinutes(tick)
       val nextTime = if (proposedNextTime.getHour > 15)
         proposedNextTime.plusDays(1).withHour(10).withMinute(0)
