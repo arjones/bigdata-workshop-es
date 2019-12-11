@@ -1051,17 +1051,19 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       logística
       \begin{itemize}
         \item Ejercicio 6: Fit Regresión Logística
-        % https://stackoverflow.com/questions/32982425/encode-and-assemble-multiple-features-in-pyspark
           \begin{enumerate}
             \item Alguno algoritmos, en Python, soportan exclusivamente
               atributos numéricos.
-              Escriba una función que haga \textit{one-hot encoding} sobre
-              atributos categóricos conservando únicamente las 20 categorías más
-              populares.
+              Escriba entonces una función que utilice \textit{StringIndexer} para
+              convertir todos los atributos categóricos.
             \item Fitee una regresión logística sobre la data de entrenamiento y
               genere predicciones (y probabilidades) para la data de test/validación.
-            \item Evalue estas predicciones (en ambos conjuntos) usando métricas
-              de \textit{accuracy}, F1 y ROC.
+            \item Evalue estas predicciones usando métricas
+              de \textit{accuracy} y ROC para el conjunto de entrenamiento y ROC
+              para el conjunto de validación.
+            \item Bonus: utilice \texttt{scikit-learn} o escriba una función
+              que compute la métrica \texttt{F1} y con ello evalué nuevamente
+              los resultados para ambos conjuntos.
           \end{enumerate}
       \end{itemize}
   \end{itemize}
@@ -1234,6 +1236,7 @@ siguientes repetimos el proceso en cada (sub)región resultante hasta llegar a a
   \frametitle{Ejercicios Árboles}
   \begin{itemize}
     \item Ejercicio 7: Árboles de decisión y aleatorios
+      % https://docs.databricks.com/_static/notebooks/binary-classification.html
       \begin{enumerate}
         \item Fittee un árbol de decisión en vez de una regresión logística y
           compare la performance de los modelos
