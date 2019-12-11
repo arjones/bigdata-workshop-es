@@ -15,6 +15,16 @@ function start {
   docker-compose --project-name wksp up -d
 }
 
+function update {
+  echo "Updating code ..."
+  git pull --all
+
+  echo "Updating docker images ..."
+  docker-compose --project-name wksp pull
+
+  echo "You probably should restart"
+}
+
 function info {
   echo '
   Everything is ready, access http://localhost/ to learn more
@@ -36,12 +46,16 @@ case $1 in
   cleanup
     ;;
 
+  update )
+  update
+    ;;
+
   logs )
   docker-compose --project-name wksp logs -f
     ;;
 
   * )
-  printf "ERROR: Missing command\n  Usage: `basename $0` (start|stop|cleanup|logs)\n"
+  printf "ERROR: Missing command\n  Usage: `basename $0` (start|stop|cleanup|logs|update)\n"
   exit 1
     ;;
 esac
