@@ -18,3 +18,4 @@ superset/conf/superset.db
 # Python
 .ipynb_checkpoints
 __pycache__
+dataset/titanic_*
