@@ -76,6 +76,7 @@ services:
     volumes:
       - ./jupyter/notebook:/notebook
       - ./dataset:/dataset
+      - ./code:/app
 
   superset:
     container_name: superset
