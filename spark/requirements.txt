@@ -3,3 +3,7 @@ findspark
 pandas
 matplotlib
 seaborn
+
+# gensim install
+wheel
+gensim
