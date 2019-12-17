@@ -3,8 +3,11 @@ Material del Workshopde Big Data
 
 ## Contenidos
 * [Levantar el ambiente](#levantar-ambiente)
-* [Batch Processing](README-batch.md)
-* [Structured Streaming Processing](README-streaming.md)
+* [Introducción a Scala](scala/README.md)
+* [Batch Processing (Scala)](README-batch.md)
+* [Structured Streaming Processing (Scala)](README-streaming.md)
+* [Machine Learning (Scala)](README-ml.md)
+* [Jupyter Notebook (Python / pySpark)](README-pyspark.md)
 
 ## Infrastructura
 
@@ -35,12 +38,14 @@ docker exec -it master bash
 root@588acf96a879:/app# spark-shell
 ```
 Probar:
+
 ```scala
 val file = sc.textFile("/dataset/yahoo-symbols-201709.csv")
 file.count
 file.take(10).foreach(println)
 ```
-Acceder a http://localhost:8080 y http://localhost:4040 para ver la SPARK-UI.
+
+Acceder al [Spark Master: http://localhost:8080](http://localhost:8080) y [SPARK-UI: http://localhost:4040](http://localhost:4040).
 
 ### Troubleshooting
 
@@ -48,11 +53,13 @@ Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória d
 
 ![](./images/docker-advanced-config.jpg)
 
-#### Alternativamente se puede probar usando la consola de [pySpark](README-pyspark.md)
-
 # Siga leyendo
 * [Introducción a Scala](scala/README.md)
-* [Batch Processing](README-batch.md)
+* [Jupyter Notebook (Python / pySpark)](README-pyspark.md)
+
+## Agradecimientos
+* Juan Pampliega ([MuttData](https://www.muttdata.ai/)): expandir y actualizar el ejemplo de [Spark Streaming](README-streaming.md)
+* Pedro Ferrari ([MuttData](https://www.muttdata.ai/)): crear el notebook de [pySpark con Machine Learning](./jupyter/notebook/titanic/)
 
 ## Sobre
 Gustavo Arjones &copy; 2017-2019  
