@@ -8,6 +8,7 @@ Material del Workshopde Big Data
 * [Structured Streaming Processing (Scala)](README-streaming.md)
 * [Machine Learning (Scala)](README-ml.md)
 * [Jupyter Notebook (Python / pySpark)](README-pyspark.md)
+* [Lista de Jupyter Notebook](jupyter/notebook/README.md)
 
 ## Infrastructura
 
