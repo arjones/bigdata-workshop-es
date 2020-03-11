@@ -10,7 +10,7 @@ services:
 
   master:
     container_name: master
-    image: arjones/pyspark:2.4.4
+    image: arjones/pyspark:2.4.5
     restart: always
     command: ["/opt/spark/sbin/start-master.sh"]
     environment:
@@ -27,7 +27,7 @@ services:
 
   worker1:
     container_name: worker1
-    image: arjones/pyspark:2.4.4
+    image: arjones/pyspark:2.4.5
     restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
@@ -46,7 +46,7 @@ services:
 
   worker2:
     container_name: worker2
-    image: arjones/pyspark:2.4.4
+    image: arjones/pyspark:2.4.5
     restart: always
     command: ["/opt/spark/sbin/start-slave.sh", "spark://master:7077"]
     environment:
@@ -65,7 +65,7 @@ services:
 
   jupyter:
     container_name: jupyter
-    image: arjones/pyspark:2.4.4
+    image: arjones/pyspark:2.4.5
     restart: always
     environment:
       MASTER: spark://master:7077
