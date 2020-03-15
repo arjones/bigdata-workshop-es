@@ -20,6 +20,6 @@ $ spark-submit \
 $ spark-submit \
   --class "es.arjon.RunAll" \
   --master 'spark://master:7077' \
-  --driver-class-path /dataset/postgresql-42.1.4.jar \
+  --driver-class-path /app/postgresql-42.1.4.jar \
   target/scala-2.11/us-stock-analysis-assembly-0.1.jar
 ```

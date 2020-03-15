@@ -1,9 +1,31 @@
 # ETL: US stocks analysis
 
+
+# Create a Project using `venv`
+
+```bash
+python3 -m venv us-stock-analysis
+source us-stock-analysis/bin/activate
+
+cd us-stock-analysis
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+
+
+
+
+
+
+
+
+
+
 ### Create a jar containing your application and its deps
 ```bash
 
-pip3 install -r requirements.txt
+Zpip3 install -r requirements.txt
 
 # Generating Wheel
 pip3 wheel -r requirements.txt -w dist
@@ -23,6 +45,7 @@ spark-submit \
 
 spark-submit \
   --master 'spark://master:7077' \
+  --jars /app/postgresql-42.1.4.jar \
   src/postgres_example.py
 
 

@@ -1,22 +1,20 @@
-import psycopg2
+from pyspark.sql import SparkSession
 
-try:
-    conn = psycopg2.connect(
-        user='workshop',
-        password='w0rkzh0p',
-        host='postgres',
-        database='workshop')
+spark = SparkSession \
+    .builder \
+    .appName("first_example") \
+    .getOrCreate()
 
-    # Open a cursor to perform database operations
-    cursor = conn.cursor()
+df = spark.read.format("jdbc") \
+    .options(driver="org.postgresql.Driver", \
+        url="jdbc:postgresql://postgres/workshop", \
+        dbtable="stocks", \
+        user="workshop", \
+        password="w0rkzh0p") \
+    .load()
 
-    cursor.execute('SELECT 1;')
-    data = cursor.fetchone()
-    print(data)
+elems_count = df.count()
 
-except psycopg2.Error as e:
-    print(e)
+print(f'Count: {elems_count}')
 
-finally:
-    cursor.close()
-    conn.close()
+df.show()
