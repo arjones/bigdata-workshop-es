@@ -102,7 +102,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:10
+    image: postgres:11
     restart: always
     volumes:
       - postgres-data:/var/lib/postgresql/data

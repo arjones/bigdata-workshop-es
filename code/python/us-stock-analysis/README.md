@@ -4,14 +4,14 @@
 # Create a Project using `venv`
 
 ```bash
-python3 -m venv us-stock-analysis
-source us-stock-analysis/bin/activate
-
 cd us-stock-analysis
+
+python3 -m venv venv
+source venv/bin/activate
+
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-
 
 
 
