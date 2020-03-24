@@ -19,3 +19,4 @@ superset/conf/superset.db
 .ipynb_checkpoints
 __pycache__
 dataset/titanic_*
+.idea/

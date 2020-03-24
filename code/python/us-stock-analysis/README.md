@@ -1,42 +1,38 @@
 # ETL: US stocks analysis
 
 
-# Create a Project using `venv`
+## How to run our app
 
 ```bash
-cd us-stock-analysis
+spark-submit \
+  --master 'spark://master:7077' \
+  --jars /app/postgresql-42.1.4.jar \
+  src/etl_steps.py \
+  /dataset/stocks-small \
+  /dataset/yahoo-symbols-201709.csv \
+  /dataset/output.parquet
+```
 
+
+## Create a Project using `venv`
+
+```bash
+mkdir project1
+cd project1
+
+# Create virtualenv
 python3 -m venv venv
 source venv/bin/activate
 
+# Upgrade pip & Install deps
 pip install --upgrade pip
 pip install -r requirements.txt
+
+charm .
 ```
 
 
-
-
-
-
-
-
-
-
-### Create a jar containing your application and its deps
-```bash
-
-Zpip3 install -r requirements.txt
-
-# Generating Wheel
-pip3 wheel -r requirements.txt -w dist
-
-
-cd ./src && zip ../dist/mysparklib.zip -r ./mysparklib
-
-
-```
-
-### Use spark-submit to run your application
+## More examples
 
 ```bash
 spark-submit \
@@ -47,14 +43,4 @@ spark-submit \
   --master 'spark://master:7077' \
   --jars /app/postgresql-42.1.4.jar \
   src/postgres_example.py
-
-
-```
-
-```bash
-$ spark-submit \
-  --class "es.arjon.RunAll" \
-  --master 'spark://master:7077' \
-  --driver-class-path /dataset/postgresql-42.1.4.jar \
-  target/scala-2.11/us-stock-analysis-assembly-0.1.jar
 ```
