@@ -24,7 +24,7 @@ object FakeStockPriceGenerator extends App {
   val brokers = args(0)
   val topic = args(1)
 
-  // The default vauel is when the batch sample data ends
+  # The default vauel is when the batch sample data ends
   val tradingStartParam = if (args.length == 3) args(2) else "2017-11-11T10:00:00Z"
 
   var tradingBeginOfTime = ZonedDateTime.parse(tradingStartParam)
@@ -59,11 +59,11 @@ object FakeStockPriceGenerator extends App {
 
 
   def nextSymbol(): String = {
-    // a very naive impl of marketing hours
-    // not consider weekends nor holidays
+    # a very naive impl of marketing hours
+    # not consider weekends nor holidays
     def nextMarketTime = {
-      // val tick = 3
-      // Sometimes it substracts 1 and generates late arriving tickers  
+      # val tick = 3
+      # Sometimes it substracts 1 and generates late arriving tickers  
       val tick = rnd.nextInt(5)-1
       val proposedNextTime = tradingBeginOfTime.plusMinutes(tick)
       val nextTime = if (proposedNextTime.getHour > 15)
@@ -78,12 +78,12 @@ object FakeStockPriceGenerator extends App {
 
     case class StockConf(symbol: String, price: Double, volatility: Double)
 
-    // Using as SEED for the generator last 90 days of stocks
-    // price: Max Closing Price
-    // volatility: StdDev of Closing Pricing
-    //    df.groupBy($"symbol")
-    //      .agg(stddev_pop($"close").as("volatility"), max($"close").as("price"))
-    //      .orderBy($"symbol")
+    # Using as SEED for the generator last 90 days of stocks
+    # price: Max Closing Price
+    # volatility: StdDev of Closing Pricing
+    #    df.groupBy($"symbol")
+    #      .agg(stddev_pop($"close").as("volatility"), max($"close").as("price"))
+    #      .orderBy($"symbol")
     //
     val quotes = List(
       StockConf("AAPL", 175.61, 6.739169981533334),
