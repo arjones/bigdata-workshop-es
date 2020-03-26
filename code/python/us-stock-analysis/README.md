@@ -38,9 +38,16 @@ python src/stream/fake_stock_price_generator.py kafka:9092 stocks 2017-11-11T10:
 ```
 
 ### Process using Spark Structured Stream API
+[Structured Streaming + Kafka Integration Guide](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html#deploying)
+
 ```bash
-....
-....
+spark-submit \
+  --master 'spark://master:7077' \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 \
+  --jars /app/postgresql-42.1.4.jar \
+  src/stream/etl_stream.py \
+  kafka:9092 stocks
+
 
 ```
 

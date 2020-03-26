@@ -105,6 +105,7 @@ CREATE TABLE test_streaming_inserts_avg_price (
 
 
 ## Más información
+* [Structured Streaming in PySpark](https://hackersandslackers.com/structured-streaming-in-pyspark/)
 * [Real-time Streaming ETL with Structured Streaming in Apache Spark 2.1](https://databricks.com/blog/2017/01/19/real-time-streaming-etl-structured-streaming-apache-spark-2-1.html)
 * [Processing Data in Apache Kafka with Structured Streaming in Apache Spark 2.2](https://databricks.com/blog/2017/04/26/processing-data-in-apache-kafka-with-structured-streaming-in-apache-spark-2-2.html)
 * [Real-Time End-to-End Integration with Apache Kafka in Apache Spark’s Structured Streaming](https://databricks.com/blog/2017/04/04/real-time-end-to-end-integration-with-apache-kafka-in-apache-sparks-structured-streaming.html)
