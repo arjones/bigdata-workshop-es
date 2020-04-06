@@ -25,6 +25,8 @@ sudo apt-get install -y docker-ce
 sudo groupadd docker
 sudo usermod -aG docker "${USER}"
 
+sudo systemctl enable docker
+
 # Docker Compose
 sudo curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -32,12 +34,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Cleanup
 sudo apt-get -y autoremove
 
-
 #############################################
 #
-# Course Material
-cd ~
-git clone https://github.com/arjones/bigdata-workshop-es.git
-
-cd bigdata-workshop-es
-# docker-compose pull
+echo '===================================='
+echo
+echo 'You need to logout and restart again'
+echo
+echo '===================================='
