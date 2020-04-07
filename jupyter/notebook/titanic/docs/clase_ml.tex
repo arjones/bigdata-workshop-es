@@ -180,8 +180,10 @@ decorations.markings}
 \useinnertheme{circles}
 
 % Itemize
+\newcommand*\smallcircled[1]{\tikz{
+  \node[shape=circle,draw,inner sep=1.6pt] (char) {#1};}}
 \setbeamertemplate{itemize item}{\large{$\bullet$}}
-\setbeamertemplate{itemize subitem}{\scriptsize{\textbf{\textcircled{}}}}
+\setbeamertemplate{itemize subitem}{\smallcircled{}}
 \setbeamertemplate{itemize subsubitem}{--}
 \setbeamercolor*{itemize item}{fg=jampp_color}
 \setbeamercolor*{itemize subitem}{fg=jampp_color}
@@ -357,14 +359,14 @@ pdfkeywords={python, machine learning}
 Spark}
 \subtitle{Especialización en Ciencia de Datos - ITBA}
 \author[]{Workshop de Big Data}
-\institute[]{12 de Diciembre de 2019}
+\institute[]{8 de Abril de 2020}
 \date[]{\includegraphics[scale=0.07]{logo_mutt.png}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
 % hyperlinking
 \AtBeginSection[]{
   \phantomtarget
-  \begin{frame}
+  \begin{frame}[fragile=singleslide]
     \frametitle{Agenda}
     \tableofcontents[currentsection]
   \end{frame}
@@ -406,7 +408,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \section{Un breve repaso del (necesario) contexto teórico}
 \label{sec:un_poco_de_contexto_teorico}
 
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Machine Learning o Aprendizaje Automático}
   \begin{itemize}
     \item Subcampo o técnica de la \textbf{minería de datos} (o \textit{data mining})
@@ -436,7 +438,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Tipos o familias de aprendizaje}
   \begin{itemize}
     \item Existen tres grandes familias de algoritmos de aprendizaje automático
@@ -472,7 +474,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \includegraphics[scale=0.17]{unsupervised.png}
   \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Aprendizaje Supervisado y Terminología}
   \begin{itemize}
     \item Objetivo es predecir una variable, la \textit{etiqueta}. Puede ser de
@@ -522,7 +524,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Tipos de modelos}
   \begin{itemize}
     \item \textbf{Paramétricos}: asumen que $f$ toma una determinada forma
@@ -543,7 +545,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \item \textbf{No Paramétricos}: no hacen supuestos sobre la forma funcional de $f$
       \begin{itemize}
         \item Ejemplos: árboles de decisión (bagging, boosting), vecinos más
-          cercanos, SVN, etc.
+          cercanos, SVM, etc.
         \item Ventajas: mejores para hacer predicciones
         \item Desventajas: más costosos de ajustar y difíciles de interpretar
       \end{itemize}
@@ -551,7 +553,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 
   \textbf{¿Los modelos más flexibles son siempre mejores para predecir?}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Overfitting y Underfitting}
   \begin{center}
     \includegraphics[scale=0.12]{overfitting.png}
@@ -583,7 +585,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Selección de modelos: Conjunto de Validación}
   \begin{itemize}
     \item Repitamos nuevamente el objetivo de todo esto... \textbf{queremos predecir bien
@@ -615,13 +617,13 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \section{Modelos de clasificación en Python}
 \label{sec:modelos_de_clasificacion_en_python}
 
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Sin Datos No Hay Paraíso}
   \begin{center}
     \includegraphics[scale=0.35]{whatido.jpg}
   \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Extracción de datos para clasificación}
   \begin{center}
     \includegraphics[scale=0.33]{titanic.jpg}
@@ -650,7 +652,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
         \end{enumerate}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{EDA y ETFL}
   \begin{itemize}
     \item EDA: Análisis exploratorio de datos  (\textcite{tukey77})
@@ -685,7 +687,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{EDA e Ingeniería de atributos}
   \begin{itemize}
     \item El aprendizaje del algoritmo de aprendizaje dependerá de los
@@ -721,7 +723,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \includegraphics[scale=0.17]{one_hot.png}
   \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Descripción de variables y preprocesamiento}
   \begin{center}
     \includegraphics[scale=0.6]{table_variables.pdf}
@@ -748,7 +750,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}[fragile]
+\begin{frame}[fragile=singleslide]
   \frametitle{Un poco más de EDA}
   \begin{itemize}
     \item Vamos a utilizar \texttt{Seaborn} para hacer algunas visualizaciones
@@ -778,7 +780,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}[fragile]
+\begin{frame}[fragile=singleslide]
   \frametitle{Aun más EDA (y ejercicios)}
     \begin{minted}{python}
     survived_age = df.filter((f.col('survived') == 1) &
@@ -812,7 +814,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{enumerate}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Transformación (análisis univariado)}
   \begin{itemize}
     \item Valores faltantes, repetidos, constantes y extremos
@@ -851,7 +853,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \end{enumerate}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Ingenieria de atributos}
   \begin{quote}
     Applied Machine Learning is basically Feature Engineering (Andrew Ng)
@@ -877,7 +879,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
     \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Clasificación versus Regresión}
 \begin{itemize}
   \item En general los conceptos del universo de problemas de regresión se
@@ -913,7 +915,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
   \includegraphics[scale=0.15]{frontier}
 \end{center}
 \end{frame}
-\begin{frame}[fragile]
+\begin{frame}[fragile=singleslide]
   \frametitle{Regresión Logística}
   \begin{itemize}
     \item Supongamos que queremos modelar la probabilidad que un cliente cancele
@@ -944,7 +946,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \includegraphics[scale=0.15]{logistic.png}
     \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Métricas de performance}
   \begin{itemize}
     \item En general estos modelos devuelven estimaciones de
@@ -970,7 +972,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Clases Desbalanceadas}
   \begin{center}
     \includegraphics[scale=0.2]{unbalance_class.png}
@@ -986,7 +988,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Precisión, cobertura y F1 Score}
   \begin{itemize}
     \item Para sortear los problemas anteriores es frecuente utilizar las
@@ -1023,7 +1025,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{La curva ROC}
   \begin{center}
     \includegraphics[scale=0.2]{roc.png}
@@ -1044,7 +1046,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 
   \textbf{Conviene utilizar una única métrica para guiar las decisiones}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Fitteo del modelo}
   \begin{itemize}
     \item Estamos casi listos para predecir sobrevivientes usando una regresión
@@ -1071,7 +1073,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Sobre train, validation, test split}
   \begin{itemize}
     \item ¿Podemos overfittear el conjunto de validación?
@@ -1095,7 +1097,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \includegraphics[scale=0.32]{sample_size.png}
   \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Tradeoff de Sesgo-Varianza}
   \begin{itemize}
     \item ¿Cuál es el valor esperado de ECM en una observación de testeo?
@@ -1124,7 +1126,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \includegraphics[scale=0.2]{bias_variance_tradeoff.png}
   \end{center}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Tradeoff Sesgo-Varianza II}
   \begin{center}
     \includegraphics[scale=0.25]{bvt2.png}
@@ -1150,7 +1152,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \section{Árboles y ensamble de modelos}
 \label{sec:arboles_y_modelos_de_}
 
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Árboles de decisión}
   \begin{itemize}
     \item Característica central: particionan el espacio de atributos en
@@ -1172,7 +1174,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Particionamiento recursivo binario}
   \begin{itemize}
     \item Proceso iterativo que funciona del siguiente modo
@@ -1205,7 +1207,7 @@ siguientes repetimos el proceso en cada (sub)región resultante hasta llegar a a
     \end{itemize}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Bagging y Árboles aleatorios}
   \begin{itemize}
     \item Bagging:
@@ -1235,7 +1237,7 @@ siguientes repetimos el proceso en cada (sub)región resultante hasta llegar a a
       \end{enumerate}
   \end{itemize}
 \end{frame}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Ejercicios Árboles}
   \begin{itemize}
     \item \textit{Ejercicio 7: Árboles de decisión y aleatorios}
@@ -1262,7 +1264,7 @@ siguientes repetimos el proceso en cada (sub)región resultante hasta llegar a a
 
 \section{Conclusión}
 \label{sec:aprendizaje_no_supervisado}
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Comentarios finales}
   \begin{itemize}
     \item Tenemos una mejor idea de data science y en particular machine
@@ -1290,7 +1292,7 @@ siguientes repetimos el proceso en cada (sub)región resultante hasta llegar a a
 
 
 
-\begin{frame}
+\begin{frame}[fragile=singleslide]
   \frametitle{Referencias}
   \begin{columns}
     \column{0.85\paperwidth}
