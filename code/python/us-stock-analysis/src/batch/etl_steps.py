@@ -4,7 +4,8 @@ from pyspark.sql import SparkSession
 
 # UDF
 from pyspark.sql.types import StringType
-#
+
+# https://spark.apache.org/docs/latest/api/python/pyspark.sql.html#module-pyspark.sql.functions
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 

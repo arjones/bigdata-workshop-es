@@ -3,6 +3,9 @@
 ## How to run our app
 
 ```bash
+docker exec -it master bash
+cd /app/python/us-stock-analysis
+
 spark-submit \
   --master 'spark://master:7077' \
   --jars /app/postgresql-42.1.4.jar \
@@ -10,6 +13,11 @@ spark-submit \
   /dataset/stocks-small \
   /dataset/yahoo-symbols-201709.csv \
   /dataset/output.parquet
+
+
+pyspark \
+  --master 'spark://master:7077' \
+  --jars /app/postgresql-42.1.4.jar
 ```
 
 ## More examples
