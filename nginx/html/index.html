@@ -12,15 +12,41 @@ Todo el material del curso est&#xE1; [disponible en Github](https://github.com/a
 ## Puertos y Servicios
 El listado abajo contiene los puertos para acceso a las interfaces graficas de los servicios instalados.
 
-Servicio | Acceso
---|--
-Spark | [Spark Master](http://localhost:8080) / [Job Progress](http://localhost:4040)
-pySpark | [Jupyter Notebook](http://localhost:8888/)
-Superset | [Dashboard](http://localhost:8088/)
+<table>
+  <thead>
+    <tr>
+      <th>Servicio</th>
+      <th>Acceso</th>
+      <th>Notas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Spark</td>
+      <td>
+        <a href="/" onclick="javascript:event.target.port=8080" target="_blank">Spark Master</a>
+        <br /><br />
+        <a href="/" onclick="javascript:event.target.port=4040" target="_blank">Job Progress</a>
+      </td>
+      <td><br /><br /><b>Job Progress</b> solo funciona cuando el job este activo</td>
+
+    </tr>
+    <tr>
+      <td>pySpark</td>
+      <td><a href="/" onclick="javascript:event.target.port=8888" target="_blank">Jupyter Notebook</a></td>
+      <td>Token required, correr <code>./control-env.sh token</code></td>
+    </tr>
+    <tr>
+      <td>Superset</td>
+      <td><a href="/" onclick="javascript:event.target.port=8088" target="_blank">Dashboard</a></td>
+      <td>Username: <code>admin</code><br />Password: <code>superset</code></td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 ## Sobre
-Gustavo Arjones &copy; 2017-2019
+Gustavo Arjones &copy; 2017-2020
 [arjon.es](https://arjon.es) | [LinkedIn](https://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)
 </xmp>
 

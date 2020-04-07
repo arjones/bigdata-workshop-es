@@ -19,5 +19,5 @@ docker push arjones/pyspark:${SPARK_VERSION}
 ```
 
 ## Sobre
-Gustavo Arjones &copy; 2017-2019  
+Gustavo Arjones &copy; 2017-2020  
 [arjon.es](https://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)

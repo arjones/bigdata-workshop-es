@@ -63,5 +63,5 @@ Si los jobs mueren (`KILLED`) y no se completan puede ser debido a la memória d
 * Pedro Ferrari ([MuttData](https://www.muttdata.ai/)): crear el notebook de [pySpark con Machine Learning](./jupyter/notebook/titanic/)
 
 ## Sobre
-Gustavo Arjones &copy; 2017-2019  
+Gustavo Arjones &copy; 2017-2020  
 [arjon.es](https://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)

@@ -114,4 +114,4 @@ CREATE TABLE test_streaming_inserts_avg_price (
 * [MLlib](README-ml.md)
 
 ____
-Gustavo Arjones &copy; 2017-2019
+Gustavo Arjones &copy; 2017-2020

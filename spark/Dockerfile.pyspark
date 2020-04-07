@@ -13,6 +13,6 @@ RUN apt-get update && \
   apt-get autoremove -y && \
   rm -rvf /tmp/requirements.txt /var/lib/apt/lists/*
 
-CMD [ "/usr/local/bin/jupyter", "notebook", "--allow-root", "--no-browser", "--ip=0.0.0.0", "--NotebookApp.token="]
+CMD [ "/usr/local/bin/jupyter", "notebook", "--allow-root", "--no-browser", "--ip=0.0.0.0"]
 
 EXPOSE 8888

@@ -31,4 +31,4 @@ Acceda al [Jupyter Notebook aqui](http://localhost:8888/), los notebook disponib
 
 
 ____
-Gustavo Arjones &copy; 2017-2019
+Gustavo Arjones &copy; 2017-2020
