@@ -79,12 +79,11 @@ print("Sample of symbols_lookup data:")
 symbols_lookup.show(3)
 
 joined_df = df_stocks \
-    .withColumn("full_date", F.unix_timestamp("dateTime", "yyyy-MM-dd").cast("timestamp")) \
+    .withColumnRenamed('dateTime', "full_date") \
     .filter("full_date >= \"2017-09-01\"") \
     .withColumn("year", F.year("full_date")) \
     .withColumn("month", F.month("full_date")) \
     .withColumn("day", F.dayofmonth("full_date")) \
-    .drop("dateTime") \
     .withColumnRenamed("name", "symbol") \
     .join(symbols_lookup, ["symbol"])
 
@@ -94,9 +93,9 @@ joined_df.show()
 # Calculate Moving Average
 # https://stackoverflow.com/questions/45806194/pyspark-rolling-average-using-timeseries-data
 
-window20 = (Window.orderBy(F.col("full_date")).rowsBetween(-20, 0))
-window50 = (Window.orderBy(F.col("full_date")).rowsBetween(-50, 0))
-window100 = (Window.orderBy(F.col("full_date")).rowsBetween(-100, 0))
+window20 = (Window.partitionBy(F.col('symbol')).orderBy(F.col("full_date")).rowsBetween(-20, 0))
+window50 = (Window.partitionBy(F.col('symbol')).orderBy(F.col("full_date")).rowsBetween(-50, 0))
+window100 = (Window.partitionBy(F.col('symbol')).orderBy(F.col("full_date")).rowsBetween(-100, 0))
 
 # // Calculate the moving average
 stocks_moving_avg_df = joined_df \

@@ -4,7 +4,9 @@ Material del Workshop de Big Data
 ## Batch Processing
 
 ## Codigo
-* [Analisis de acciones de EEUU](code/us-stock-analysis) (US Stocks)
+* [Analisis de acciones de EEUU](code/scala/us-stock-analysis) (Scala)
+* [Analisis de acciones de EEUU](code/python/us-stock-analysis) (Python)
+* [us-stock-analysis Jupyter Notebook](jupyter/notebook/batch_etl_steps.ipynb) (Python)
 
 ## Compilar el codigo
 Compilar y empaquetar el codigo para deploy en el cluster
