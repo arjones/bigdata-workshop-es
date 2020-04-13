@@ -36,10 +36,10 @@ services:
     depends_on:
       - master
     ports:
-      - "4040"
+      - 4041:4040
       - "6066"
       - "7077"
-      - "8080"
+      - 8081:8080
     volumes:
       - ./code:/app
       - ./dataset:/dataset
@@ -55,10 +55,10 @@ services:
     depends_on:
       - master
     ports:
-      - "4040"
+      - 4042:4040
       - "6066"
       - "7077"
-      - "8080"
+      - 8082:8080
     volumes:
       - ./code:/app
       - ./dataset:/dataset
