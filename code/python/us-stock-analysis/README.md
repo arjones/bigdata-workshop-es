@@ -64,7 +64,14 @@ python src/stream/fake_stock_price_generator.py kafka:9092 stocks 2017-11-11T10:
 ### Process using Spark Structured Stream API
 [Structured Streaming + Kafka Integration Guide](https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html#deploying)
 
+Abrir otra tab y volver a ingresar al servidor donde se encuentran corriendo los contenedores.
+Luego, para correr la aplicación de spark conectarse a un worker, ir al directorio con el código y correr `spark-submit` de la siguiente manera:
+
 ```bash
+docker exec -it worker1 bash
+
+cd /app/python/us-stock-analysis/
+
 spark-submit \
   --master 'spark://master:7077' \
   --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 \
