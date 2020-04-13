@@ -5,7 +5,9 @@ Material del Workshop de Big Data
 
 ![Superset Dashboard Example](images/superset.png)
 
-* Acceder a http://localhost:8088/, user: `admin`, pass: `superset`.
+* Antes de acceder por primera vez a Superset inicializar la base de datos y crear las credenciales del usuario admin corriendo el siguient comando: 
+`docker exec -it superset superset-init`
+* Acceder a http://localhost:8088/ (utilizar las credenciales creadas en el primer paso).
 * Agregar el database (Sources > Databases):
   - Database: `Workshop`
   - SQLAlchemy URI: `postgresql://workshop:w0rkzh0p@postgres/workshop`
