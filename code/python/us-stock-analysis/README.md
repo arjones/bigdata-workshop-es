@@ -134,9 +134,3 @@ Una vez completados los pasos anteriores pruebe algunos de las siguientes modifi
 2. Agregue nuevas visualizaciones al dashboard de Superset y haga que se refresque cada 10 segundos.
 3. Agregue al ETL batch el código necesario para que también guarde la información del volumen de cada acción.
 4. Agregue al `fake_stock_price_generator.py` lógica para generar un volumen para cada acción de manera artificial además del precio. Modifique los jobs de streaming para procesar este dato. 
-
-
-
-
-
-
