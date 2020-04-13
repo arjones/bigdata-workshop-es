@@ -8,6 +8,7 @@ function stop {
 function cleanup {
   echo "Removing volume"
   docker volume rm wksp_postgres-data
+  docker volume rm wksp_superset
 }
 
 function start {
