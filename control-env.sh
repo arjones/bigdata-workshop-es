@@ -38,6 +38,11 @@ function token {
   echo "${SERVER}" | grep '/notebook' | sed -E 's/^.*=([a-z0-9]+).*$/\1/'
 }
 
+function superset-init {
+  echo 'Initializing Superset database using sqlite'
+  docker exec -it superset superset-init
+}
+
 case $1 in
   start )
   start
@@ -63,6 +68,10 @@ case $1 in
 
   token )
   token
+    ;;
+
+  superset-init )
+  superset-init
     ;;
 
   * )

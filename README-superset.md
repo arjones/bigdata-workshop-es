@@ -5,8 +5,8 @@ Material del Workshop de Big Data
 
 ![Superset Dashboard Example](images/superset.png)
 
-* Antes de acceder por primera vez a Superset inicializar la base de datos y crear las credenciales del usuario admin corriendo el siguient comando: 
-`docker exec -it superset superset-init`
+* Antes de acceder por primera vez a Superset inicializar la base de datos y crear las credenciales del usuario admin corriendo el siguiente comando: 
+`./control-env superset-init`
 * Acceder a http://localhost:8088/ (utilizar las credenciales creadas en el primer paso).
 * Agregar el database (Sources > Databases):
   - Database: `Workshop`
