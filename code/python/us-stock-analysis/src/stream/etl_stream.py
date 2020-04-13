@@ -74,18 +74,23 @@ def start_stream(args):
         .trigger(processingTime='30 seconds') \
         .start()
 
-    avg_pricing = stocks \
-        .groupBy(F.col("symbol")) \
-        .agg(F.avg(F.col("price")).alias("avg_price"))
+    query.awaitTermination()
+
+
+    # avg_pricing = stocks \
+    #     .groupBy(F.col("symbol")) \
+    #     .agg(F.avg(F.col("price")).alias("avg_price"))
 
     ####################################
     # Console Output
     ####################################
-    query2 = avg_pricing.writeStream \
-        .outputMode('complete') \
-        .format("console") \
-        .trigger(processingTime="10 seconds") \
-        .start()
+    # query2 = avg_pricing.writeStream \
+    #     .outputMode('complete') \
+    #     .format("console") \
+    #     .trigger(processingTime="10 seconds") \
+    #     .start()
+
+    # query2.awaitTermination()
 
     ####################################
     # Table in Memory
@@ -105,8 +110,121 @@ def start_stream(args):
     #     print(query3.lastProgress)
     #     sleep(10)
 
-    query2.awaitTermination()
+    # query3.awaitTermination()
+
+    ####################################
+    # Writing to Postgres
+    ####################################
+
+    # Simple insert
+    # query = stream_to_postgres(stocks)
+    # query.awaitTermination()
+
+    # Average Price Aggregation
+    # query = stream_aggregation_to_postgres(stocks)
+    # query.awaitTermination()
+
+    # Final Average Price Aggregation with Timestamp columns
+    # query = stream_aggregation_to_postgres_final(stocks)
+    # query.awaitTermination()
+
     pass
+
+
+def define_write_to_postgres(table_name):
+  
+    def write_to_postgres(df, epochId):
+        return (
+            df.write
+                .format("jdbc")
+                .option("url", "jdbc:postgresql://postgres/workshop")
+                .option("dbtable", f"workshop.{table_name}")
+                .option("user", "workshop")
+                .option("password", "w0rkzh0p")
+                .option("driver", "org.postgresql.Driver")
+                .mode('append')
+                .save()
+        )
+    return write_to_postgres
+
+    
+def stream_to_postgres(stocks, output_table="streaming_inserts"):
+    wstocks =  (
+        stocks
+            .withWatermark("timestamp", "60 seconds")
+            .select("timestamp", "symbol", "price")
+    )
+
+    write_to_postgres_fn = define_write_to_postgres("streaming_inserts")
+    
+    query = (
+        wstocks.writeStream
+        .foreachBatch(write_to_postgres_fn)
+        .outputMode("append")
+        .trigger(processingTime="10 seconds")
+        .start()
+    )
+
+    return query
+
+
+def summarize_stocks(stocks):
+    avg_pricing = (
+        stocks
+        .withWatermark("timestamp", "60 seconds")
+        .groupBy(
+            F.window("timestamp", "30 seconds"),
+            stocks.symbol)
+        .agg(F.avg("price").alias('avg_price'))
+    )
+    avg_pricing.printSchema()
+    return avg_pricing
+
+
+def stream_aggregation_to_postgres(stocks, output_table="streaming_inserts_avg_price"):
+
+    avg_pricing = summarize_stocks(stocks)
+
+    window_to_string = F.udf(lambda w: str(w.start) + ' - ' + str(w.end), StringType())
+    
+    write_to_postgres_fn = define_write_to_postgres(output_table)
+
+    query = (
+        avg_pricing\
+        .withColumn("window", window_to_string("window"))
+        .writeStream
+        .foreachBatch(write_to_postgres_fn)
+        .outputMode("append")
+        .trigger(processingTime="10 seconds")
+        .start()
+    )
+
+    return query
+
+
+def stream_aggregation_to_postgres_final(stocks, output_table="streaming_inserts_avg_price_final"):
+
+    avg_pricing = summarize_stocks(stocks)
+
+    window_start_ts_fn = F.udf(lambda w: w.start, TimestampType())
+
+    window_end_ts_fn = F.udf(lambda w: w.end, TimestampType())
+    
+    write_to_postgres_fn = define_write_to_postgres(output_table)
+
+    query = (
+        avg_pricing\
+        .withColumn("window_start", window_start_ts_fn("window"))
+        .withColumn("window_end", window_end_ts_fn("window"))
+        .drop("window")
+        .writeStream
+        .foreachBatch(write_to_postgres_fn)
+        .outputMode("append")
+        .trigger(processingTime="10 seconds")
+        .start()
+    )
+
+    return query
 
 
 if __name__ == '__main__':
