@@ -43,6 +43,10 @@ function superset-init {
   docker exec -it superset superset-init
 }
 
+function psql {
+  docker exec -it postgres psql -U workshop workshop
+}
+
 case $1 in
   start )
   start
@@ -72,6 +76,10 @@ case $1 in
 
   superset-init )
   superset-init
+    ;;
+
+  psql )
+  psql
     ;;
 
   * )
