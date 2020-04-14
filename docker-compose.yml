@@ -124,6 +124,37 @@ services:
       - ./superset/conf/superset_config.py:/etc/superset/superset_config.py
       - superset:/var/lib/superset
 
+  postgres-airflow:
+    container_name: postgres-airflow
+    image: postgres:11
+    restart: always
+    volumes:
+      - postgres-airflow-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    ports:
+      - "5434:5432"
+
+  airflow:
+    container_name: airflow
+    image: puckel/docker-airflow
+    restart: always
+    depends_on:
+      - postgres-airflow
+    environment:
+      EXECUTOR: Local
+      LOAD_EX: n
+      AIRFLOW__WEBSERVER__WEB_SERVER_PORT: 9090
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow:5432/airflow
+      AIRFLOW__CORE__FERNET_KEY: "Eff80poJxv6LE4432pDC6OmD6N449KCSuhUAMLXiq4U="
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./airflow/dags:/usr/local/airflow/dags
+
 volumes:
   postgres-data:
   superset:
+  postgres-airflow-data:
