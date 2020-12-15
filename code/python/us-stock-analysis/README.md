@@ -3,9 +3,13 @@
 ## How to run our app
 
 ```bash
+# Levantando docker en modo iterativo, conectando al master
 docker exec -it master bash
+
+# voy a la carpeta base de mi codigo
 cd /app/python/us-stock-analysis
 
+# Envía el job para ser ejecutado
 spark-submit \
   --master 'spark://master:7077' \
   --jars /app/postgresql-42.1.4.jar \
@@ -14,7 +18,7 @@ spark-submit \
   /dataset/yahoo-symbols-201709.csv \
   /dataset/output.parquet
 
-
+# Console
 pyspark \
   --master 'spark://master:7077' \
   --jars /app/postgresql-42.1.4.jar
