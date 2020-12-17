@@ -65,7 +65,7 @@ def _insert_daily_data(**context):
     return
 
 
-default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 4, 8)}
+default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 12, 10)}
 with DAG('stocks', default_args=default_args, schedule_interval='0 4 * * *') as dag:
     create_table_if_not_exists = SqliteOperator(
         task_id='create_table_if_not_exists',

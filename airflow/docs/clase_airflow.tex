@@ -83,7 +83,7 @@ decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=south west, yshift=-2pt, xshift=1pt] at (current page.south west)
-{\includegraphics[scale=0.022]{logo_mutt.png}};
+{\includegraphics[scale=0.22]{logo_mutt.png}};
 \draw[jampp_color] ([yshift=-0.65cm, xshift=0.25cm]current page.north west)
   -- ([yshift=-0.65cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
@@ -358,8 +358,8 @@ pdfkeywords={python, machine learning}
 \title[Intro Airflow]{Armado de Workflows Dinámicos con Apache Airflow}
 \subtitle{Especialización en Ciencia de Datos - ITBA}
 \author[]{Workshop de Big Data}
-\institute[]{14 de Abril de 2020}
-\date[]{\includegraphics[scale=0.07]{logo_mutt.png}}
+\institute[]{17 de Diciembre de 2020}
+\date[]{\includegraphics[scale=0.35]{logo_mutt.png}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
 % hyperlinking
@@ -436,7 +436,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
           \item Por ejemplo visualizar si una tarea está tardando 3x más que lo habitual
           o si los datos del día 10 del mes actual se procesaron correctamente
         \end{itemize}
-      \item Al tener workflows en python puro esto son fácilmente versionables.
+      \item Al tener workflows en Python puro esto son fácilmente versionables.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -447,7 +447,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \item \textit{DAG}: grafo dirigido acíclico de las tareas que uno quiere
       correr (workflow)
       \begin{itemize}
-        \item El DAG es simplemente un archivo de python
+        \item El DAG es simplemente un archivo de Python
           que define la estructura del grafo
       \end{itemize}
     \item \textit{Operator}: definen que se va a ejecutar (por ejemplo un comando bash, un insert a una tabla, etc)
@@ -487,6 +487,117 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \section{DAGs y Ejercicios Guiados}
 \label{sec:primeros_dags}
 
+
+\begin{frame}[fragile=singleslide]
+  \frametitle{Digresión: Poetry y Python virtual environments}
+  \begin{itemize}
+    \item \textit{Poetry} es una herramienta que combina el manejador de
+      paquetes \textit{pip} con virtual environments (un directorio con una
+      instalacion aislada de Python)
+    \begin{itemize}
+      \item ¿Cómo lo instalamos?
+      \begin{minted}{shell}
+      $> python -m pip install --user poetry
+      $> which poetry
+      /home/pedro/.local/bin/poetry
+      \end{minted}
+      \begin{itemize}
+        \item Si esto devuelve un error agregar \texttt{\$HOME./local} a la
+          variable de entorno \texttt{\$PATH}.
+      \end{itemize}
+      \item ¿Cómo instalamos librerías con poetry?
+        \begin{enumerate}
+          \item Crear un nuevo directorio airflow-101 y en el correr
+          \begin{minted}{shell}
+          $> poetry init
+          $> poetry add colorful
+          \end{minted}
+        \item Probemos ahora correr
+          \begin{minted}{shell}
+          $> python -c "import colorful"
+          ModuleNotFoundError: No module named 'colorful'
+          $> which python
+          /usr/bin/python
+          $> poetry run python -c "import colorful"
+          \end{minted}
+        \item Podemos \textit{spawnear} una nueva shell dentro del venv:
+          \begin{minted}{shell}
+          $> poetry shell
+          (airflow-101) $> which python
+          /home/pedro/.cache/pypoetry/virtualenvs/
+          \end{minted}
+        \end{enumerate}
+    \item Notemos además que se creó un archivo \texttt{poetry.lock} que
+      especifica los \textit{requerimientos} de librerías para nuestra
+        aplicación junto a la versión de Python
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Instalación local de Apache Airflow}
+  \begin{itemize}
+    \item Ejecutar los siguientes comandos
+      \begin{enumerate}
+        \item Instalar apache-airflow
+        \begin{minted}{shell}
+        $> poetry add apache-airflow
+        \end{minted}
+        \item Opcional: cambiar el directorio default de configuración de airflow
+          (\texttt{~/airflow}) setteando una variable de entorno
+          \texttt{AIRFLOW_HOME} en el archivo \texttt{~/airflow-101/.env}:
+          \begin{minted}{shell}
+          $> echo 'AIRFLOW_HOME="/home/pedro/airflow-cfg"' > .env
+          $> cat .env
+          AIRFLOW_HOME="/home/pedro/airflow-cfg"
+          \end{minted}
+          \begin{itemize}
+            \item Al correr \texttt{poetry shell} se debe luego
+              \textit{sourcear} este archivo con \texttt{source .env}.
+          \end{itemize}
+        \item Abra una shell de Poetry y corra \texttt{airflow version}, esto
+          creara la carpeta con los archivos de configuracion, logs, etc:
+          \begin{minted}{shell}
+          $> ls ~/airflow-cfg
+          $> poetry shell
+          (airflow-101) $> source .env && echo $AIRFLOW_HOME
+          /home/pedro/airflow-cfg
+          (airflow-101) $> airflow version
+          (airflow-101) $> ls ~/airflow-cfg
+          airflow.cfg airflow.db logs unittests.cfg
+          \end{minted}
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Instalación local de Apache Airflow II}
+  \begin{itemize}
+    \item Continuar ejecutando los siguientes comandos
+    \begin{enumerate}
+      \setcounter{enumi}{3}
+      \item Cree
+        nuevo directorio \texttt{dags} (aquí guardaremos el archivo
+        \texttt{titanic_dag.py} definido en el siguiente slide) y cambie el directorio de dags
+        (\texttt{dags_folder}) en
+        \texttt{~/airflow-cfg/airflow.cfg} para que apunte a este nuevo
+        directorio:
+      \begin{minted}{shell}
+      $> mkdir dags && cd dags
+      ...
+      $> head ~/airflow-cfg/airflow.cfg | grep dags_folder
+      dags_folder = /home/pedro/airflow-101/dags
+      \end{minted}
+    \item Corra dentro de la shell de Poetry \texttt{airflow initdb} y luego \texttt{airflow list_dags}
+      para listar los dags.
+    \item Corra \texttt{airflow webserver -p 9594} y abra \texttt{localhost:9594} en
+      el browser
+    \item Inspeccione los dags: para correrlos debe activarlos y luego
+      prender el scheduler con \texttt{airflow scheduler}
+    \end{enumerate}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.2]{example_bash_operator.png}
+  \end{center}
+\end{frame}
 \begin{frame}[fragile=singleslide]
   \frametitle{Nuestro primer dag: Bash, Dummy y Python Operators}
   \begin{minted}{python}
@@ -532,7 +643,7 @@ with DAG(
       \item The filename is currently hardcoded as random_number.txt, change it
         to reflect the execution date i.e files should now be named something
         like 20200413.txt. \textit{Hint}: you need to capture the execution date by
-        adding a **context arg in the python callable.
+        adding a **context arg in the Python callable.
       \item Hard: convert the PythonOperator into a BranchPythonOperator that will be followed by another PythonOperator (BashOperator) task that prints HIGH (LOW) if the resulting squared numbered is greater (smaller) than 30.
       \item Extra (take-home): Add logic to erase the created temporary files.
     \end{enumerate}
@@ -560,7 +671,7 @@ with DAG(
         \end{itemize}
       \item Activar el dag y dejarlo correr por el scheduler
       \item Completadas las tareas chequear que los datos se insertaron desde
-        la cli de sqlite o a través del objeto \texttt{SqLiteClient} de python.
+        la cli de sqlite o a través del objeto \texttt{SqLiteClient} de Python.
         \begin{minted}{shell}
         $> ~/.local/litecli /tmp/sqlite_default.db
         /tmp/sqlite_default.db> select * from stocks_daily;
@@ -616,116 +727,6 @@ smpt entry in the airflow.cfg file
 \label{sec:ejercicios_adicionales}
 
 \begin{frame}[fragile=singleslide]
-  \frametitle{Digresión: Poetry y python virtual environments}
-  \begin{itemize}
-    \item \textit{Poetry} es una herramienta que combina el manejador de
-      paquetes \textit{pip} con virtual environments (un directorio con una
-      instalacion aislada de python)
-    \begin{itemize}
-      \item ¿Cómo lo instalamos?
-      \begin{minted}{shell}
-      $> python -m pip install --user poetry
-      $> which poetry
-      /home/pedro/.local/bin/poetry
-      \end{minted}
-      \begin{itemize}
-        \item Si esto devuelve un error agregar \texttt{\$HOME./local} a la
-          variable de entorno \texttt{\$PATH}.
-      \end{itemize}
-      \item ¿Cómo instalamos librerías con poetry?
-        \begin{enumerate}
-          \item Crear un nuevo directorio airflow-101 y en el correr
-          \begin{minted}{shell}
-          $> poetry init
-          $> poetry add colorful
-          \end{minted}
-        \item Probemos ahora correr
-          \begin{minted}{shell}
-          $> python -c "import colorful"
-          ModuleNotFoundError: No module named 'colorful'
-          $> which python
-          /usr/bin/python
-          $> poetry run python -c "import colorful"
-          \end{minted}
-        \item Podemos \textit{spawnear} una nueva shell dentro del venv:
-          \begin{minted}{shell}
-          $> poetry shell
-          (airflow-101) $> which python
-          /home/pedro/.cache/pypoetry/virtualenvs/
-          \end{minted}
-        \end{enumerate}
-    \item Notemos además que se creó un archivo \texttt{poetry.lock} que
-      especifica los \textit{requerimientos} de librerías para nuestra
-        aplicación junto a la versión de python
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-\begin{frame}[fragile=singleslide]
-  \frametitle{Instalación local de Apache Airflow}
-  \begin{itemize}
-    \item Ejecutar los siguientes comandos
-      \begin{enumerate}
-        \item Instalar apache-airflow
-        \begin{minted}{shell}
-        $> poetry add apache-airflow
-        \end{minted}
-        \item Cambiar el directorio default de configuración de airflow
-          (\texttt{~/airflow}) setteando una variable de entorno
-          \texttt{AIRFLOW_HOME} en el archivo \texttt{~/airflow-101/.env}:
-          \begin{minted}{shell}
-          $> echo 'AIRFLOW_HOME="/home/pedro/airflow-cfg"' > .env
-          $> cat .env
-          AIRFLOW_HOME="/home/pedro/airflow-cfg"
-          \end{minted}
-          \begin{itemize}
-            \item Al correr \texttt{poetry shell} se debe luego
-              \textit{sourcear} este archivo con \texttt{source .env}.
-          \end{itemize}
-        \item Abra una shell de Poetry y corra \texttt{airflow version}, esto
-          creara la carpeta con los archivos de configuracion, logs, etc:
-          \begin{minted}{shell}
-          $> ls ~/airflow-cfg
-          $> poetry shell
-          (airflow-101) $> source .env && echo $AIRFLOW_HOME
-          /home/pedro/airflow-cfg
-          (airflow-101) $> airflow version
-          (airflow-101) $> ls ~/airflow-cfg
-          airflow.cfg airflow.db logs unittests.cfg
-          \end{minted}
-      \end{enumerate}
-  \end{itemize}
-\end{frame}
-\begin{frame}[fragile=singleslide]
-  \frametitle{Instalación local de Apache Airflow II}
-  \begin{itemize}
-    \item Continuar ejecutando los siguientes comandos
-    \begin{enumerate}
-      \setcounter{enumi}{3}
-      \item Cree
-        nuevo directorio \texttt{dags} (aquí guardaremos el archivo
-        \texttt{titanic_dag.py} definido en el siguiente slide) y cambie el directorio de dags
-        (\texttt{dags_folder}) en
-        \texttt{~/airflow-cfg/airflow.cfg} para que apunte a este nuevo
-        directorio:
-      \begin{minted}{shell}
-      $> mkdir dags && cd dags
-      ...
-      $> head ~/airflow-cfg/airflow.cfg | grep dags_folder
-      dags_folder = /home/pedro/airflow-101/dags
-      \end{minted}
-    \item Corra dentro de la shell de Poetry \texttt{airflow initdb} y luego \texttt{airflow list_dags}
-      para listar los dags.
-    \item Corra \texttt{airflow webserver} y abra \texttt{localhost:8080} en
-      el browser
-    \item Inspeccione los dags: para correrlos debe activarlos y luego
-      prender el scheduler con \texttt{airflow scheduler}
-    \end{enumerate}
-  \end{itemize}
-  \begin{center}
-    \includegraphics[scale=0.2]{example_bash_operator.png}
-  \end{center}
-\end{frame}
-\begin{frame}[fragile=singleslide]
   \frametitle{Exercise 3 (MEDIUM): Scheduling Titanic Prediction}
   \begin{enumerate}
     \item (Optional) Install a local version of Airflow following the previous
@@ -760,7 +761,7 @@ smpt entry in the airflow.cfg file
   \begin{enumerate}
     \item Uncomment the commented code in \texttt{word\_count_dag.py} and try to
       fix the resulting error when loading the dag. \texttt{Hint}: you need to
-      install the python \texttt{docker} library.
+      install the Python \texttt{docker} library.
     \item The \texttt{word\_count_dag.py} DAG launches a Spark job via
       \texttt{DockerOperator} to find out which is the most recurring word in a
       text file. This is then inserted in a SQL table. You can check out the

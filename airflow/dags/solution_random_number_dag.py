@@ -31,7 +31,7 @@ def _print_high():
     return 'HIGH'
 
 
-default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 4, 10)}
+default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 12, 14)}
 with DAG(
     'random_number_extended', default_args=default_args, schedule_interval='0 4 * * *'
 ) as dag:

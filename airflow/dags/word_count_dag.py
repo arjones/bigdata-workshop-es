@@ -40,7 +40,7 @@ def _insert_file_to_sql(**context):
     hook.insert_rows(SQL_TABLE, df_tuple)
 
 
-default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 4, 10)}
+default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 12, 14)}
 with DAG('word_count', default_args=default_args, schedule_interval='0 0 * * *') as dag:
     create_table_if_not_exists = PostgresOperator(
         task_id='create_table_if_not_exists',
