@@ -83,7 +83,7 @@ decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=south west, yshift=-2pt, xshift=1pt] at (current page.south west)
-{\includegraphics[scale=0.022]{logo_mutt.png}};
+{\includegraphics[scale=0.22]{logo_mutt.png}};
 \draw[jampp_color] ([yshift=-0.65cm, xshift=0.25cm]current page.north west)
   -- ([yshift=-0.65cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
@@ -358,8 +358,8 @@ pdfkeywords={python, machine learning}
 \title[Intro Airflow]{Armado de Workflows Dinámicos con Apache Airflow}
 \subtitle{Especialización en Ciencia de Datos - ITBA}
 \author[]{Workshop de Big Data}
-\institute[]{14 de Abril de 2020}
-\date[]{\includegraphics[scale=0.07]{logo_mutt.png}}
+\institute[]{17 de Diciembre de 2020}
+\date[]{\includegraphics[scale=0.35]{logo_mutt.png}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
 % hyperlinking
@@ -436,7 +436,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
           \item Por ejemplo visualizar si una tarea está tardando 3x más que lo habitual
           o si los datos del día 10 del mes actual se procesaron correctamente
         \end{itemize}
-      \item Al tener workflows en python puro esto son fácilmente versionables.
+      \item Al tener workflows en Python puro esto son fácilmente versionables.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -447,7 +447,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
     \item \textit{DAG}: grafo dirigido acíclico de las tareas que uno quiere
       correr (workflow)
       \begin{itemize}
-        \item El DAG es simplemente un archivo de python
+        \item El DAG es simplemente un archivo de Python
           que define la estructura del grafo
       \end{itemize}
     \item \textit{Operator}: definen que se va a ejecutar (por ejemplo un comando bash, un insert a una tabla, etc)
@@ -487,140 +487,13 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \section{DAGs y Ejercicios Guiados}
 \label{sec:primeros_dags}
 
-\begin{frame}[fragile=singleslide]
-  \frametitle{Nuestro primer dag: Bash, Dummy y Python Operators}
-  \begin{minted}{python}
-from datetime import datetime
-from pathlib import Path
-from airflow.models import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
-
-STORE_DIR = Path(__file__).resolve().parent / 'tmp-files' / 'random-num'
-Path.mkdir(STORE_DIR, exist_ok=True, parents=True)
-bash_cmd = f"echo $(( ( RANDOM % 10 )  + 1 )) > {str(STORE_DIR / 'random_number.txt')}"
-
-def _read_number_and_square(store_dir):
-    fn = str(store_dir / 'random_number.txt')
-    with open(fn, 'r') as f:
-        n = f.readline()
-    return int(n) ** 2
-
-default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 4, 10)}
-with DAG(
-    'random_number', default_args=default_args, schedule_interval='0 4 * * *'
-) as dag:
-    dummy_start_task = DummyOperator(task_id=f'dummy_start')
-    generate_random_number = BashOperator(
-        task_id='generate_random_number', bash_command=bash_cmd)
-    read_num_and_square = PythonOperator(
-        task_id='read_number_and_square_it',
-        python_callable=_read_number_and_square,
-        op_args=[STORE_DIR])
-    dummy_start_task >> generate_random_number >> read_num_and_square
-  \end{minted}
-
-\end{frame}
-\begin{frame}[fragile=singleslide]
-  \frametitle{Exercise 1: Extending random number dag}
-  \begin{enumerate}
-    \item Using the random_number_dag.py file do the following steps in order
-      to build the workflow seen in the figure
-    \begin{enumerate}
-      \item Add logging messages that signal a) which file is going to be read and b) what number was read from the file.
-      \item The filename is currently hardcoded as random_number.txt, change it
-        to reflect the execution date i.e files should now be named something
-        like 20200413.txt. \textit{Hint}: you need to capture the execution date by
-        adding a **context arg in the python callable.
-      \item Hard: convert the PythonOperator into a BranchPythonOperator that will be followed by another PythonOperator (BashOperator) task that prints HIGH (LOW) if the resulting squared numbered is greater (smaller) than 30.
-      \item Extra (take-home): Add logic to erase the created temporary files.
-    \end{enumerate}
-  \end{enumerate}
-  \begin{center}
-    \includegraphics[scale=0.1]{exercise_1.png}
-  \end{center}
-\end{frame}
-\begin{frame}[fragile=singleslide]
-  \frametitle{Segundo dag: insertando a db con xcoms}
-  \begin{itemize}
-    \item Realicemos los siguientes pasos antes de correr el dag
-      \texttt{stocks_dag.py}:
-      \begin{enumerate}
-        \item Instalemos una cli de sqlite llamada \texttt{litecli} con \texttt{pip}:
-        \begin{minted}{shell}
-        $> pip install litecli
-        $> ~/.local/bin/litecli /tmp/sqlite_default.db
-        \end{minted}
-      \item Chequeamos que \texttt{stocks_dag} aparece listado por
-        \texttt{airflow list_dags}
-        \begin{itemize}
-          \item Si ello no sucede podemos resettear la db con \texttt{airflow
-            resetdb} (cuidado con este comando!)
-        \end{itemize}
-      \item Activar el dag y dejarlo correr por el scheduler
-      \item Completadas las tareas chequear que los datos se insertaron desde
-        la cli de sqlite o a través del objeto \texttt{SqLiteClient} de python.
-        \begin{minted}{shell}
-        $> ~/.local/litecli /tmp/sqlite_default.db
-        /tmp/sqlite_default.db> select * from stocks_daily;
-        +------------+--------+--------------------+-----------+
-        | date       | symbol | avg_num_trades     | avg_price |
-        +------------+--------+--------------------+-----------+
-        | 2020-04-08 | aapl   | 29322.097916666666 | 264.3     |
-        | 2020-04-09 | aapl   | 28145.224305555555 | 267.385   |
-        | 2020-04-10 | aapl   | <null>             | <null>    |
-        \end{minted}
-      \end{enumerate}
-    \item Notar algunos elementos importantes del dag
-      \begin{itemize}
-        \item El \textit{execution_date} es el período de tiempo en el cual
-          vamos a procesar la data (distinto del período/momento de la corrida)
-        \item Si volvemos a correr uno de los tasks de inserción el dag
-          rompe...
-      \end{itemize}
-  \end{itemize}
-\end{frame}
-\begin{frame}[fragile=singleslide]
-  \frametitle{Exercise 2: Small Stocks report}
-  \begin{enumerate}
-    \item Using the stock_dag.py file do the following steps in order to build the
-workflow seen in the figure
-    \begin{enumerate}
-      \item Modify the workflow to also get (and insert) data from Tesla (tsla)
-        and Facebook (fb) stocks. Note: the easy way to do this is to add a
-        loop inside the method that performs the request. The harder one (
-        seen in the figure) is to have one branch
-        per company spawning from the initial task which then reunite in the
-        insert task.
-      \item Note that if you clear an insert task and re-run it you'll get an
-        error (due to the unique constraint). Add some try/catch logic to
-        gracefully avoid this error in the insert callback function.
-        \begin{enumerate}
-          \item You can alternatively let the task fail and add trigger_rule='all_done' to the
-        successive task in order to trigger it regardless of the failure of the previous task.
-        \end{enumerate}
-      \item Add a new task that reads (i.e queries) all records inserted in the present run and returns a string stating which was the company with the highest average trades per minute in that date.
-
-      \item Bonus: Create a final task that sends an email, using EmailOperator, of the
-report/insight obtained in 3.  Note: for this exercise you will need to modify the
-smpt entry in the airflow.cfg file
-        \end{enumerate}
-        \end{enumerate}
-    \begin{center}
-       \includegraphics[scale=0.1]{exercise_2.png}
-    \end{center}
-\end{frame}
-
-\section{Ejercicios Adicionales}
-\label{sec:ejercicios_adicionales}
 
 \begin{frame}[fragile=singleslide]
-  \frametitle{Digresión: Poetry y python virtual environments}
+  \frametitle{Digresión: Poetry y Python virtual environments}
   \begin{itemize}
     \item \textit{Poetry} es una herramienta que combina el manejador de
       paquetes \textit{pip} con virtual environments (un directorio con una
-      instalacion aislada de python)
+      instalacion aislada de Python)
     \begin{itemize}
       \item ¿Cómo lo instalamos?
       \begin{minted}{shell}
@@ -656,7 +529,7 @@ smpt entry in the airflow.cfg file
         \end{enumerate}
     \item Notemos además que se creó un archivo \texttt{poetry.lock} que
       especifica los \textit{requerimientos} de librerías para nuestra
-        aplicación junto a la versión de python
+        aplicación junto a la versión de Python
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -726,6 +599,134 @@ smpt entry in the airflow.cfg file
   \end{center}
 \end{frame}
 \begin{frame}[fragile=singleslide]
+  \frametitle{Nuestro primer dag: Bash, Dummy y Python Operators}
+  \begin{minted}{python}
+from datetime import datetime
+from pathlib import Path
+from airflow.models import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.python_operator import PythonOperator
+
+STORE_DIR = Path(__file__).resolve().parent / 'tmp-files' / 'random-num'
+Path.mkdir(STORE_DIR, exist_ok=True, parents=True)
+bash_cmd = f"echo $(( ( RANDOM % 10 )  + 1 )) > {str(STORE_DIR / 'random_number.txt')}"
+
+def _read_number_and_square(store_dir):
+    fn = str(store_dir / 'random_number.txt')
+    with open(fn, 'r') as f:
+        n = f.readline()
+    return int(n) ** 2
+
+default_args = {'owner': 'pedro', 'retries': 0, 'start_date': datetime(2020, 4, 10)}
+with DAG(
+    'random_number', default_args=default_args, schedule_interval='0 4 * * *'
+) as dag:
+    dummy_start_task = DummyOperator(task_id=f'dummy_start')
+    generate_random_number = BashOperator(
+        task_id='generate_random_number', bash_command=bash_cmd)
+    read_num_and_square = PythonOperator(
+        task_id='read_number_and_square_it',
+        python_callable=_read_number_and_square,
+        op_args=[STORE_DIR])
+    dummy_start_task >> generate_random_number >> read_num_and_square
+  \end{minted}
+
+\end{frame}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Exercise 1: Extending random number dag}
+  \begin{enumerate}
+    \item Using the random_number_dag.py file do the following steps in order
+      to build the workflow seen in the figure
+    \begin{enumerate}
+      \item Add logging messages that signal a) which file is going to be read and b) what number was read from the file.
+      \item The filename is currently hardcoded as random_number.txt, change it
+        to reflect the execution date i.e files should now be named something
+        like 20200413.txt. \textit{Hint}: you need to capture the execution date by
+        adding a **context arg in the Python callable.
+      \item Hard: convert the PythonOperator into a BranchPythonOperator that will be followed by another PythonOperator (BashOperator) task that prints HIGH (LOW) if the resulting squared numbered is greater (smaller) than 30.
+      \item Extra (take-home): Add logic to erase the created temporary files.
+    \end{enumerate}
+  \end{enumerate}
+  \begin{center}
+    \includegraphics[scale=0.1]{exercise_1.png}
+  \end{center}
+\end{frame}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Segundo dag: insertando a db con xcoms}
+  \begin{itemize}
+    \item Realicemos los siguientes pasos antes de correr el dag
+      \texttt{stocks_dag.py}:
+      \begin{enumerate}
+        \item Instalemos una cli de sqlite llamada \texttt{litecli} con \texttt{pip}:
+        \begin{minted}{shell}
+        $> pip install litecli
+        $> ~/.local/bin/litecli /tmp/sqlite_default.db
+        \end{minted}
+      \item Chequeamos que \texttt{stocks_dag} aparece listado por
+        \texttt{airflow list_dags}
+        \begin{itemize}
+          \item Si ello no sucede podemos resettear la db con \texttt{airflow
+            resetdb} (cuidado con este comando!)
+        \end{itemize}
+      \item Activar el dag y dejarlo correr por el scheduler
+      \item Completadas las tareas chequear que los datos se insertaron desde
+        la cli de sqlite o a través del objeto \texttt{SqLiteClient} de Python.
+        \begin{minted}{shell}
+        $> ~/.local/litecli /tmp/sqlite_default.db
+        /tmp/sqlite_default.db> select * from stocks_daily;
+        +------------+--------+--------------------+-----------+
+        | date       | symbol | avg_num_trades     | avg_price |
+        +------------+--------+--------------------+-----------+
+        | 2020-04-08 | aapl   | 29322.097916666666 | 264.3     |
+        | 2020-04-09 | aapl   | 28145.224305555555 | 267.385   |
+        | 2020-04-10 | aapl   | <null>             | <null>    |
+        \end{minted}
+      \end{enumerate}
+    \item Notar algunos elementos importantes del dag
+      \begin{itemize}
+        \item El \textit{execution_date} es el período de tiempo en el cual
+          vamos a procesar la data (distinto del período/momento de la corrida)
+        \item Si volvemos a correr uno de los tasks de inserción el dag
+          rompe...
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}[fragile=singleslide]
+  \frametitle{Exercise 2: Small Stocks report}
+  \begin{enumerate}
+    \item Using the stock_dag.py file do the following steps in order to build the
+workflow seen in the figure
+    \begin{enumerate}
+      \item Modify the workflow to also get (and insert) data from Tesla (tsla)
+        and Facebook (fb) stocks. Note: the easy way to do this is to add a
+        loop inside the method that performs the request. The harder one (
+        seen in the figure) is to have one branch
+        per company spawning from the initial task which then reunite in the
+        insert task.
+      \item Note that if you clear an insert task and re-run it you'll get an
+        error (due to the unique constraint). Add some try/catch logic to
+        gracefully avoid this error in the insert callback function.
+        \begin{enumerate}
+          \item You can alternatively let the task fail and add trigger_rule='all_done' to the
+        successive task in order to trigger it regardless of the failure of the previous task.
+        \end{enumerate}
+      \item Add a new task that reads (i.e queries) all records inserted in the present run and returns a string stating which was the company with the highest average trades per minute in that date.
+
+      \item Bonus: Create a final task that sends an email, using EmailOperator, of the
+report/insight obtained in 3.  Note: for this exercise you will need to modify the
+smpt entry in the airflow.cfg file
+        \end{enumerate}
+        \end{enumerate}
+    \begin{center}
+       \includegraphics[scale=0.1]{exercise_2.png}
+    \end{center}
+\end{frame}
+
+\section{Ejercicios Adicionales}
+\label{sec:ejercicios_adicionales}
+
+\begin{frame}[fragile=singleslide]
   \frametitle{Exercise 3 (MEDIUM): Scheduling Titanic Prediction}
   \begin{enumerate}
     \item (Optional) Install a local version of Airflow following the previous
@@ -760,7 +761,7 @@ smpt entry in the airflow.cfg file
   \begin{enumerate}
     \item Uncomment the commented code in \texttt{word\_count_dag.py} and try to
       fix the resulting error when loading the dag. \texttt{Hint}: you need to
-      install the python \texttt{docker} library.
+      install the Python \texttt{docker} library.
     \item The \texttt{word\_count_dag.py} DAG launches a Spark job via
       \texttt{DockerOperator} to find out which is the most recurring word in a
       text file. This is then inserted in a SQL table. You can check out the
