@@ -542,7 +542,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
         \begin{minted}{shell}
         $> poetry add apache-airflow
         \end{minted}
-        \item Cambiar el directorio default de configuración de airflow
+        \item Opcional: cambiar el directorio default de configuración de airflow
           (\texttt{~/airflow}) setteando una variable de entorno
           \texttt{AIRFLOW_HOME} en el archivo \texttt{~/airflow-101/.env}:
           \begin{minted}{shell}
@@ -588,7 +588,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
       \end{minted}
     \item Corra dentro de la shell de Poetry \texttt{airflow initdb} y luego \texttt{airflow list_dags}
       para listar los dags.
-    \item Corra \texttt{airflow webserver} y abra \texttt{localhost:8080} en
+    \item Corra \texttt{airflow webserver -p 9594} y abra \texttt{localhost:9594} en
       el browser
     \item Inspeccione los dags: para correrlos debe activarlos y luego
       prender el scheduler con \texttt{airflow scheduler}
