@@ -1,6 +1,6 @@
 # Instrucciones de Instalación
 
-**IMPORTANTE:** Cualquier opción de instalación requeriere por lo menos 8Gb de RAM para un correcto funcionamiento.
+**IMPORTANTE:** Cualquier opción de instalación requiere por lo menos 8Gb de RAM para un correcto funcionamiento.
 
 ## Utilizando Windows
 
@@ -16,12 +16,14 @@ Al finalizar la instalación clonar el repositorio:
 
 ```shell
 git clone https://github.com/arjones/bigdata-workshop-es.git
-
 cd bigdata-workshop-es
 
 ./control-env.sh start
 ```
 
 ## Sobre
-Gustavo Arjones &copy; 2017-2020  
+
+Gustavo Arjones &copy; 2017-2020
 [arjon.es](https://arjon.es) | [LinkedIn](http://linkedin.com/in/arjones/) | [Twitter](https://twitter.com/arjones)
+
+Juan Pampliega - Pedro Ferrari &copy; 2021-
