@@ -1,4 +1,4 @@
-pyspark==2.4.5
+pyspark==3.2.2
 
 # Deps for fake_stock_price_gen
 kafka-python==2.0.1
